@@ -12,7 +12,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.File;
 import java.io.IOException;
+
+import swervelib.SwerveDrive;
+import swervelib.encoders.SwerveAbsoluteEncoder;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
