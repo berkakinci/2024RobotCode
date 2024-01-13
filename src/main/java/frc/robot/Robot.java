@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.File;
 import java.io.IOException;
+import edu.wpi.first.cameraserver.CameraServer;
+
 
 import swervelib.SwerveDrive;
 import swervelib.encoders.SwerveAbsoluteEncoder;
@@ -42,7 +44,8 @@ public class Robot extends TimedRobot
   {
     return instance;
   }
-
+  
+  
   /**
    * This function is run when the robot is first started up and should be used for any initialization code.
    */
@@ -57,6 +60,14 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
+
+    CameraServer.startAutomaticCapture();
+
+    LimelightHelpers.setPipelineIndex(null, 1);
+
+    //LimelightHelpers.setCameraMode_Driver(null);
+
+      
   }
 
   /**
@@ -74,6 +85,8 @@ public class Robot extends TimedRobot
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+
   }
 
   /**
@@ -134,6 +147,8 @@ public class Robot extends TimedRobot
     }
     m_robotContainer.setDriveMode();
     m_robotContainer.setMotorBrake(true);
+
+
   }
 
   /**
