@@ -63,10 +63,6 @@ public class Robot extends TimedRobot
 
     CameraServer.startAutomaticCapture();
 
-    LimelightHelpers.setPipelineIndex(null, 1);
-
-    //LimelightHelpers.setCameraMode_Driver(null);
-
       
   }
 
