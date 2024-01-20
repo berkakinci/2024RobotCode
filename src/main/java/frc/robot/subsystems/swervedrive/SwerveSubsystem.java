@@ -4,11 +4,13 @@
 
 package frc.robot.subsystems.swervedrive;
 
-/*import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;*/
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
+
+import edu.wpi.first.hal.simulation.ConstBufferCallback;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -16,9 +18,14 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +84,32 @@ public class SwerveSubsystem extends SubsystemBase {
       throw new RuntimeException(e);
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
+  
+    AutoBuilder.configureHolonomic(
+    this::getPose,
+    this::resetOdometry,
+    this::getRobotVelocity,
+    this::drive,
+    Constants.pathFollowerConfig,
+    () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+      },
+      this
+  );
+
+  //logging
+  PathPlannerLogging.setLogActivePathCallback((poses) -> swerveDrive.field.getObject("path").setPoses(poses));
+
+  SmartDashboard.putData("Field", swerveDrive.field);
+  
   }
 
   /**
@@ -130,6 +163,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
   }
 
   @Override
@@ -314,6 +348,10 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param useAllianceColor Automatically transform the path based on alliance color.
    * @return PathPlanner command to follow the given path.
    */
+
+   
+
+   }
   /*public Command creatPathPlannerCommand(String path, PathConstraints constraints, Map<String, Command> eventMap,
                                          PIDConstants translation, PIDConstants rotation, boolean useAllianceColor)
   {
@@ -342,4 +380,4 @@ public class SwerveSubsystem extends SubsystemBase {
 
     return autoBuilder.fullAuto(pathGroup);
   }*/
-}
+//}

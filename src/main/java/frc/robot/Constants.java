@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -31,6 +35,7 @@ public final class Constants
   public static final double ROBOT_MASS = (25) * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(Units.inchesToMeters(28), Units.inchesToMeters(28), Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
+  public static final double ROBORADIUS = 0.5; //distance from center to farthest point on a module
 
   public static final class Auton
   {
@@ -39,7 +44,7 @@ public final class Constants
     public static final PIDFConfig yAutoPID     = new PIDFConfig(0.7, 0, 0);
     public static final PIDFConfig angleAutoPID = new PIDFConfig(0.4, 0, 0.01);
 
-    public static final double MAX_SPEED        = 400;
+    public static final double MAX_SPEED        = 4.6;
     public static final double MAX_ACCELERATION = 2;
   }
 
@@ -73,4 +78,12 @@ public final class Constants
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
     }
+
+    public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
+      new PIDConstants(0.7, 0, 0), // Translation constants 
+      new PIDConstants(0.4, 0, 0.01), // Rotation constants 
+      Auton.MAX_SPEED, 
+      ROBORADIUS, // Drive base radius (distance from center to furthest module) 
+      new ReplanningConfig()
+    );
 }
