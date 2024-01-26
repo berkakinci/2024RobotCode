@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -101,7 +99,7 @@ public class RobotContainer
     
 
     autoChooser = AutoBuilder.buildAutoChooser(); //default auto will be "Commands.non()"
-    SmartDashboard.putData("Auto Mode", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
   }
 
@@ -120,7 +118,7 @@ public class RobotContainer
     new JoystickButton (driverXbox, 2).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
   
-    SmartDashboard.putData("Example Auto", new PathPlannerAuto("Example Auto"));
+    /*SmartDashboard.putData("Example Auto", new PathPlannerAuto("Example Auto"));
     SmartDashboard.putData("2 meter 90 degree test", new PathPlannerAuto("2 meter 90 degree test"));
 
     // Add a button to run pathfinding commands to SmartDashboard
@@ -166,7 +164,7 @@ public class RobotContainer
       path.preventFlipping = true;
 
       AutoBuilder.followPath(path).schedule();
-    }));
+    }));*/
   
   }
 
