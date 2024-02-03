@@ -44,6 +44,9 @@ import com.pathplanner.lib.path.PathPlannerPath;
 public class RobotContainer
 {
 
+  public myNumberInator genNumInator = new myNumberInator();
+  public myCircleInator genCircleInator = new myCircleInator();
+
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve/neo"));
@@ -69,12 +72,16 @@ public class RobotContainer
       // Applies deadbands and inverts controls because joysticks
       // are back-right positive while robot
       // controls are front-left positive
-      () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-        OperatorConstants.LEFT_Y_DEADBAND),
-      () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-        OperatorConstants.LEFT_X_DEADBAND),
-      () -> -driverXbox.getRightX(),
-      () -> -driverXbox.getRightY());
+      () -> this.genCircleInator.getX(),
+      () -> this.genCircleInator.getY(),
+      () -> this.genNumInator.get(),
+      () -> this.genNumInator.get());
+      // () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+      //  OperatorConstants.LEFT_Y_DEADBAND),
+      //() -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+      //  OperatorConstants.LEFT_X_DEADBAND),
+      //() -> -driverXbox.getRightX(),
+      //() -> -driverXbox.getRightY());
 
     AbsoluteFieldDrive closedFieldAbsoluteDrive = new AbsoluteFieldDrive(drivebase,
       () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
