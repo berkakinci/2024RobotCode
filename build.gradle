@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.1.1"
+    id "org.ysb33r.doxygen" version "latest.release"
 }
 
 java {
@@ -98,4 +99,38 @@ wpi.java.configureTestTasks(test)
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
+}
+
+doxygen {
+    source './src/main/java'
+    source '../allwpilib/wpilibj/src/'
+
+    option 'generate_html', true
+    option 'generate_latex', true
+    option 'use_pdflatex', true
+
+    option 'recursive', true
+    option 'warn_if_undocumented', false
+    option 'generate_treeview', true
+    // option 'disable_index', true
+    // option 'full_sidebar', true
+    option 'call_graph', true
+    option 'caller_graph', true
+
+    option 'have_dot', true
+    // option 'uml_look', true
+    option 'dot_image_format', 'svg'
+    option 'interactive_svg', true
+
+    // For more Details:
+    option 'source_browser', true
+    // option 'inline_sources', true
+
+    // Gradle on MacOS doesn't seem to find the Grolifant-downloaded doxygen
+    // This could be specific to Apple Silicon
+    executables {
+        doxygen {
+            executableBySearchPath('doxygen')
+        }
+    }
 }
