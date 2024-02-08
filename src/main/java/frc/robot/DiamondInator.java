@@ -1,6 +1,6 @@
 package frc.robot;
 
-public class DiamondInator extends myCircleInator{
+public class DiamondInator extends CircleInator{
     public DiamondInator(double radius, double angle) {
         this.radius = radius;
         this.angle = angle;

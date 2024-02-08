@@ -2,15 +2,15 @@ package frc.robot;
 
 import java.util.function.DoubleSupplier;
 
-public class myCircleInator {
+public class CircleInator {
     static double TAU = 2 * Math.PI;
 
     double radius = 1.0;
     double angle = 0.0;
 
-    public myCircleInator() {};
+    public CircleInator() {};
     
-    public myCircleInator(double radius, double angle) {
+    public CircleInator(double radius, double angle) {
         this.radius = radius;
         this.angle = angle;
     }

@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class DebugCommand extends Command {
     SwerveSubsystem swerve;
     NumberInator genNumInator = new NumberInator();
-    //myCircleInator genShapeInator = new myCircleInator(0.5,0);
+    //CircleInator genShapeInator = new CircleInator(0.5,0);
     DiamondInator genShapeInator = new DiamondInator(0.2, 0);
 
     public DebugCommand(SwerveSubsystem swerve) {
