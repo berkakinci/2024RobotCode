@@ -44,12 +44,15 @@ import com.pathplanner.lib.path.PathPlannerPath;
 public class RobotContainer
 {
 
-  public myNumberInator genNumInator = new myNumberInator();
-  public myCircleInator genCircleInator = new myCircleInator();
+  public NumberInator genNumInator = new NumberInator();
+  public CircleInator genCircleInator = new CircleInator();
 
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve/neo"));
+
+  public DebugCommand debugCommand = new DebugCommand(drivebase);
+
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //static CommandJoystick driverController = new CommandJoystick(0);
@@ -67,7 +70,9 @@ public class RobotContainer
   {
     // Configure the trigger bindings
     configureBindings();
-
+  if(true) {
+    drivebase.setDefaultCommand(debugCommand);
+  } else {
     AbsoluteDrive closedAbsoluteDrive = new AbsoluteDrive(drivebase,
       // Applies deadbands and inverts controls because joysticks
       // are back-right positive while robot
@@ -102,6 +107,7 @@ public class RobotContainer
         () -> -driverXbox.getRightX(), () -> true);
 
     drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedFieldAbsoluteDrive);
+  }
   
     
 
