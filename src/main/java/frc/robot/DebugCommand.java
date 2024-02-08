@@ -8,7 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class DebugCommand extends Command {
     SwerveSubsystem swerve;
     myNumberInator genNumInator = new myNumberInator();
-    myCircleInator genCircleInator = new myCircleInator();
+    //myCircleInator genShapeInator = new myCircleInator(0.5,0);
+    DiamondInator genShapeInator = new DiamondInator(0.2, 0);
 
     public DebugCommand(SwerveSubsystem swerve) {
         this.swerve = swerve;
@@ -18,9 +19,9 @@ public class DebugCommand extends Command {
     @Override
     public void execute() {
         // Get directions
-        Translation2d translation = new Translation2d(genCircleInator.getX(),
-                                                      genCircleInator.getY());
-        genCircleInator.rotate();
+        Translation2d translation = new Translation2d(genShapeInator.getX(),
+                                                      genShapeInator.getY());
+        genShapeInator.rotate();
 
         // Make the robot move
         swerve.drive(translation, 0.0, false);
