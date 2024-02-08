@@ -21,7 +21,7 @@ public class myCircleInator {
     }
 
     public void rotate() {
-        this.rotate(TAU/60*0.2);
+        this.rotate((TAU/10)*0.020); // Full revolution every 10 seconds at 20ms period.
     }
 
     public double getX() {
