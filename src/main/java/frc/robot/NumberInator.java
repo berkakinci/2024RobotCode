@@ -1,10 +1,10 @@
 package frc.robot;
 import java.util.function.DoubleSupplier;
 
-public class myNumberInator {
+public class NumberInator {
   double lastNum = 0.0;
 
-  public myNumberInator() {};
+  public NumberInator() {};
 
   public double getNext() {
     this.advance();
