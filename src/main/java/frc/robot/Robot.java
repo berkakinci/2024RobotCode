@@ -13,7 +13,16 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.File;
 import java.io.IOException;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.net.PortForwarder;
 import swervelib.parser.SwerveParser;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 
 /**
@@ -21,7 +30,7 @@ import swervelib.parser.SwerveParser;
  * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
  * project, you must also update the build.gradle file in the project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
 
   private static Robot   instance;
   private Command m_autonomousCommand;
@@ -44,6 +53,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
+    
     //PathPlannerServer.startServer(5811);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -54,6 +65,11 @@ public class Robot extends TimedRobot {
     disabledTimer = new Timer();
 
     CameraServer.startAutomaticCapture();
+
+    PortForwarder.add(5800, "photonvision.local", 5800);
+    PortForwarder.add(1182, "photonvision.local", 1182);
+
+
       
   }
 

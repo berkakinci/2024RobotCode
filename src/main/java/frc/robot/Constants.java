@@ -84,6 +84,6 @@ public final class Constants
       new PIDConstants(0.4, 0, 0.01), // Rotation constants 
       Auton.MAX_SPEED, 
       ROBORADIUS, // Drive base radius (distance from center to furthest module) 
-      new ReplanningConfig()
+      new ReplanningConfig(true, true)
     );
 }
