@@ -63,6 +63,7 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public SwerveSubsystem(File directory, LimelightIO limelightIO) {
     this.limelightIO = limelightIO;
+    m_limelight = new Limelight(this.limelightIO, limelightInputs);
     // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
     //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
     //  The encoder resolution per motor revolution is 1 per motor revolution.
