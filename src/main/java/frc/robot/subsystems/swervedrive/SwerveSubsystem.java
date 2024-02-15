@@ -20,8 +20,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.LimelightIO.Limelight;
-import frc.robot.subsystems.LimelightIO.LimelightIO;
+
 import frc.robot.subsystems.LimelightIO.LimelightIOInputsAutoLogged;
 
 import java.io.File;
@@ -35,12 +34,6 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase {
-
-  private final Limelight m_limelight;
-
-  private final LimelightIO limelightIO;
-
-  private final LimelightIOInputsAutoLogged limelightInputs = new LimelightIOInputsAutoLogged();
 
   /**
    * Swerve drive object.
@@ -61,9 +54,7 @@ public class SwerveSubsystem extends SubsystemBase {
    *
    * @param directory Directory of swerve drive config files.
    */
-  public SwerveSubsystem(File directory, LimelightIO limelightIO) {
-    this.limelightIO = limelightIO;
-    m_limelight = new Limelight(this.limelightIO, limelightInputs);
+  public SwerveSubsystem(File directory) {
     // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
     //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
     //  The encoder resolution per motor revolution is 1 per motor revolution.
@@ -167,7 +158,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    limelightIO.
     
     
   }
