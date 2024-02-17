@@ -12,6 +12,8 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -63,7 +65,7 @@ public final class Constants
     public static final double LEFT_Y_DEADBAND = 0.01;
   }
 
-  public static class Vision {
+  /*public static class Vision {
         public static final String kCameraName = "photonvision";
         // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
         public static final Transform3d kRobotToCam =
@@ -77,6 +79,27 @@ public final class Constants
         // (Fake values. Experiment and determine estimation noise on an actual robot.)
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    }*/
+
+    public static class Vision {
+        public static final String FRONT_CAMERA_NAME = "limelight-front";
+
+        // TODO: measure these offsets
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.2774, 0, 0.2271, new Rotation3d(0,0.559,0));
+
+        // TODO: find these values
+        public static final double MAX_VISION_DELAY_SECS = 0.08;
+        public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
+        public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
+        public static final double MIN_ACCEPTED_NUM_TAGS = 1;
+        public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
+        public static final double MAX_ACCEPTED_ELEVATOR_SPEED_MPS = 0.05;
+
+        public static final int SIM_RES_WIDTH = 1280;
+        public static final int SIM_RES_HEIGHT = 960;
+        public static final Rotation2d SIM_DIAGONAL_FOV = Rotation2d.fromDegrees(100);
+        public static final double SIM_FPS = 14.5;
+        public static final double SIM_AVG_LATENCY_MS = 67.0;
     }
 
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(

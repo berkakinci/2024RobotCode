@@ -7,11 +7,13 @@ package frc.robot.subsystems.swervedrive;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -21,17 +23,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-import frc.robot.subsystems.LimelightIO.LimelightIOInputsAutoLogged;
 
 import java.io.File;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
+import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
+
+import swervelib.parser.SwerveDriveConfiguration;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -48,6 +52,8 @@ public class SwerveSubsystem extends SubsystemBase {
    * paths with events.
    */
   //private SwerveAutoBuilder autoBuilder  = null;
+
+  private final SwerveDrivePoseEstimator poseEstimator;
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -69,6 +75,8 @@ public class SwerveSubsystem extends SubsystemBase {
     System.out.println("\t\"drive\": " + driveConversionFactor);
     System.out.println("}");
 
+
+
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
@@ -80,6 +88,9 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
   
+    poseEstimator = new SwerveDrivePoseEstimator(getKinematics(), getHeading(), getModulePositions(), getPose());
+
+
     AutoBuilder.configureHolonomic(
     this::getPose,
     this::resetOdometry,
@@ -306,6 +317,22 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public SwerveDriveConfiguration getSwerveDriveConfiguration() {
     return swerveDrive.swerveDriveConfiguration;
+  }
+
+  /**
+   * Gets the current module positions (azimuth and wheel position (meters)).
+   *
+   * @return A list of SwerveModulePositions containg the current module positions
+   */
+  public SwerveModulePosition[] getModulePositions()
+  {
+    SwerveModulePosition[] positions =
+        new SwerveModulePosition[getSwerveDriveConfiguration().moduleCount];
+    for (SwerveModule module : swerveModules)
+    {
+      positions[module.moduleNumber] = module.getPosition();
+    }
+    return positions;
   }
 
   /**
