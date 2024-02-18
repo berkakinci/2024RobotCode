@@ -7,6 +7,7 @@ package frc.robot.subsystems.swervedrive;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,9 +23,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
+import frc.robot.utils.vision.TimestampedVisionPose;
 
 import java.io.File;
+
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
@@ -53,7 +57,11 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   //private SwerveAutoBuilder autoBuilder  = null;
 
-  private final SwerveDrivePoseEstimator poseEstimator;
+  private SwerveDrivePoseEstimator poseEstimator;
+
+  //private SwerveModule[] swerveModules;
+
+  private Rotation2d rawGyroRotation = new Rotation2d();
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -76,7 +84,6 @@ public class SwerveSubsystem extends SubsystemBase {
     System.out.println("}");
 
 
-
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
@@ -88,8 +95,9 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
   
-    poseEstimator = new SwerveDrivePoseEstimator(getKinematics(), getHeading(), getModulePositions(), getPose());
+    poseEstimator = new SwerveDrivePoseEstimator(getKinematics(), getHeading(), getModulePositions(), new Pose2d(), VecBuilder.fill(0.1, 0.1, 0.1), VecBuilder.fill(0.5, 0.5, 0.5));
 
+    //swerveModules = swerveDrive.getModules();
 
     AutoBuilder.configureHolonomic(
     this::getPose,
@@ -169,7 +177,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+
+    rawGyroRotation = getHeading();
+
+    poseEstimator.update(rawGyroRotation, getModulePositions());
     
   }
 
@@ -203,7 +214,14 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return The robot's pose
    */
   public Pose2d getPose() {
-    return swerveDrive.getPose();
+    return poseEstimator.getEstimatedPosition();
+  }
+
+  /**
+   * Resets the current odometry pose
+   **/
+  public void setPose (Pose2d pose) {
+    poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }
 
   /**
@@ -215,6 +233,8 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.setChassisSpeeds(chassisSpeeds);
   }
 
+
+  
   /**
    * Post the trajectory to the field.
    *
@@ -326,13 +346,7 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public SwerveModulePosition[] getModulePositions()
   {
-    SwerveModulePosition[] positions =
-        new SwerveModulePosition[getSwerveDriveConfiguration().moduleCount];
-    for (SwerveModule module : swerveModules)
-    {
-      positions[module.moduleNumber] = module.getPosition();
-    }
-    return positions;
+    return swerveDrive.getModulePositions();
   }
 
   /**
@@ -357,6 +371,10 @@ public class SwerveSubsystem extends SubsystemBase {
   public void addFakeVisionReading() {
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
+
+ public void updateWithVisionPose(TimestampedVisionPose visionPose) {
+  poseEstimator.addVisionMeasurement(visionPose.poseMeters(), visionPose.timestampSecs());
+}
 
   /**
    * Factory to fetch the PathPlanner command to follow the defined path.
