@@ -9,18 +9,14 @@ import static frc.robot.Constants.Vision.*;
 
 public class VisionPoseAcceptor {
     private final Supplier<ChassisSpeeds> robotVelocitySupplier;
-    private final Supplier<Double> elevatorVelocitySupplier;
 
     public VisionPoseAcceptor(
-            Supplier<ChassisSpeeds> robotVelocitySupplier,
-            Supplier<Double> elevatorVelocitySupplier) {
+            Supplier<ChassisSpeeds> robotVelocitySupplier) {
         this.robotVelocitySupplier = robotVelocitySupplier;
-        this.elevatorVelocitySupplier = elevatorVelocitySupplier;
     }
 
     public boolean shouldAcceptVision(TimestampedVisionPose visionPose) {
         ChassisSpeeds robotVelocity = robotVelocitySupplier.get();
-        double elevatorVelocity = elevatorVelocitySupplier.get();
         // Do not accept poses that have too much delay
         if (Timer.getFPGATimestamp() - visionPose.timestampSecs() >= MAX_VISION_DELAY_SECS) return false;
 
@@ -35,7 +31,6 @@ public class VisionPoseAcceptor {
         boolean translatingTooFast =
                 Math.hypot(robotVelocity.vxMetersPerSecond, robotVelocity.vyMetersPerSecond)
                         > MAX_ACCEPTED_LINEAR_SPEED_MPS;
-        boolean elevatorTooFast = Math.abs(elevatorVelocity) > MAX_ACCEPTED_ELEVATOR_SPEED_MPS;
-        return !rotatingTooFast && !translatingTooFast && !elevatorTooFast;
+        return !rotatingTooFast && !translatingTooFast;
     }
 }

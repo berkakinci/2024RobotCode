@@ -6,24 +6,24 @@ package frc.robot;
 
 //import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.TimedRobot;
+//import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.File;
-import java.io.FileReader;
+//import java.io.FileReader;
 import java.io.IOException;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.net.PortForwarder;
 import swervelib.parser.SwerveParser;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.littletonrobotics.junction.LogFileUtil;
+//import org.json.simple.JSONObject;
+//import org.json.simple.parser.JSONParser;
+//import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+//import org.littletonrobotics.junction.Logger;
+//import org.littletonrobotics.junction.networktables.NT4Publisher;
+//import org.littletonrobotics.junction.wpilog.WPILOGReader;
+//import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
@@ -63,7 +63,7 @@ public class Robot extends LoggedRobot {
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
 
-    CameraServer.startAutomaticCapture();
+    //CameraServer.startAutomaticCapture();
 
     PortForwarder.add(5800, "limelight.local", 5800);
     PortForwarder.add(1182, "limelight.local", 1182);
@@ -71,7 +71,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    . addVisionMeasurement
 
   }
   @Override

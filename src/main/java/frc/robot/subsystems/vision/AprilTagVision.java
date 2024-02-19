@@ -2,6 +2,7 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 import frc.robot.utils.vision.TimestampedVisionPose;
@@ -10,9 +11,11 @@ import frc.robot.utils.vision.VisionPoseAcceptor;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Consumer;
+//import java.util.function.Supplier;
 import java.util.function.Supplier;
 
 import static frc.robot.Constants.Vision.FRONT_CAMERA_POSE;
+import static frc.robot.Constants.Vision.FRONT_CAMERA_NAME;
 
 
 public class AprilTagVision extends SubsystemBase {
@@ -22,21 +25,35 @@ public class AprilTagVision extends SubsystemBase {
     private final Consumer<TimestampedVisionPose> visionPoseConsumer;
     private final VisionPoseAcceptor poseAcceptor;
 
+    public Optional<TimestampedVisionPose> latestPose;
+
     private TimestampedVisionPose frontPose =
             new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0], true);
 
-    public AprilTagVision(
+    private static boolean hasInstance = false;
+
+    private AprilTagVision(
             AprilTagVisionIO frontCameraIO,
             Consumer<TimestampedVisionPose> visionPoseConsumer,
             VisionPoseAcceptor poseAcceptor) {
+        if (hasInstance) throw new IllegalStateException("Instance of vision already exists");
+        hasInstance = true;
+
         this.frontCameraIO = frontCameraIO;
         this.visionPoseConsumer = visionPoseConsumer;
         this.poseAcceptor = poseAcceptor;
     }
 
+    public static AprilTagVision createAprilTagVision(Consumer<TimestampedVisionPose> visionPoseConsumer,
+                                            VisionPoseAcceptor poseAcceptor) {
+        return new AprilTagVision(
+                new AprilTagVisionIOLimelight(FRONT_CAMERA_NAME, FRONT_CAMERA_POSE),
+                visionPoseConsumer,
+                poseAcceptor);
+    }
+
     @Override
     public void periodic() {
-        // TODO: need to change if one camera is stationary
         frontCameraIO.setPoseOffset(
                 new Pose3d(
                         FRONT_CAMERA_POSE.getX(),
@@ -56,7 +73,7 @@ public class AprilTagVision extends SubsystemBase {
                     true);
         }
 
-        Optional<TimestampedVisionPose> latestPose = getEstimatedPose();
+        /*Optional<TimestampedVisionPose>*/ latestPose = getEstimatedPose();
         latestPose.ifPresent(visionPose -> Logger.recordOutput("Vision/EstimatedPose", visionPose.poseMeters()));
         latestPose.ifPresent(visionPoseConsumer);
     }
@@ -74,7 +91,7 @@ public class AprilTagVision extends SubsystemBase {
             Pose2d[] allTagPoses = Arrays.copyOf(frontPose.tagPosesMeters(), frontPose.getNumTagsSeen());
 
             return Optional.of(new TimestampedVisionPose(
-                    frontPose.timestampSecs() / 2,
+                    frontPose.timestampSecs(),
                     frontPose.poseMeters(),
                     allTagIDs,
                     allTagPoses,

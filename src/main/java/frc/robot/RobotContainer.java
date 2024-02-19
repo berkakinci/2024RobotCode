@@ -21,6 +21,10 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+//import frc.robot.subsystems.vision.AprilTagVision;
+//import frc.robot.utils.vision.VisionPoseAcceptor;
+//import swervelib.SwerveDrive;
+
 import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -49,10 +53,16 @@ public class RobotContainer
 
   private final SendableChooser<Command> autoChooser;
 
+  //public final AprilTagVision aprilTagVision;
+
   public RobotContainer()
   {
     // Configure the trigger bindings
     configureBindings();
+
+    /*aprilTagVision = AprilTagVision.createReal(
+                        SwerveDrive::addVisionMeasurement,
+                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));*/
 
     AbsoluteDrive closedAbsoluteDrive = new AbsoluteDrive(drivebase,
       // Applies deadbands and inverts controls because joysticks

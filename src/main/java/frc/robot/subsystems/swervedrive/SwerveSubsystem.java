@@ -24,14 +24,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.vision.TimestampedVisionPose;
+import frc.robot.utils.vision.VisionPoseAcceptor;
+import frc.robot.subsystems.vision.AprilTagVision;
 
 import java.io.File;
+import java.util.Optional;
+import java.util.function.Consumer;
 
-import org.littletonrobotics.junction.AutoLogOutput;
+//import org.littletonrobotics.junction.AutoLogOutput;
 
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
-import swervelib.SwerveModule;
+//import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -39,7 +43,7 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
-import swervelib.parser.SwerveDriveConfiguration;
+//import swervelib.parser.SwerveDriveConfiguration;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -62,7 +66,9 @@ public class SwerveSubsystem extends SubsystemBase {
   //private SwerveModule[] swerveModules;
 
   private Rotation2d rawGyroRotation = new Rotation2d();
+  private Consumer<TimestampedVisionPose> visionPoseConsumer;
 
+  
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
    *
@@ -98,6 +104,11 @@ public class SwerveSubsystem extends SubsystemBase {
     poseEstimator = new SwerveDrivePoseEstimator(getKinematics(), getHeading(), getModulePositions(), new Pose2d(), VecBuilder.fill(0.1, 0.1, 0.1), VecBuilder.fill(0.5, 0.5, 0.5));
 
     //swerveModules = swerveDrive.getModules();
+
+    AprilTagVision aprilTagVision = AprilTagVision.createAprilTagVision(
+    visionPoseConsumer,
+    new VisionPoseAcceptor(swerveDrive::getRobotVelocity)
+  );
 
     AutoBuilder.configureHolonomic(
     this::getPose,
@@ -181,6 +192,8 @@ public class SwerveSubsystem extends SubsystemBase {
     rawGyroRotation = getHeading();
 
     poseEstimator.update(rawGyroRotation, getModulePositions());
+
+    addTimestampedVisionPose(aprilTagVision.latestPose);
     
   }
 
@@ -372,8 +385,14 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
 
- public void updateWithVisionPose(TimestampedVisionPose visionPose) {
-  poseEstimator.addVisionMeasurement(visionPose.poseMeters(), visionPose.timestampSecs());
+ public void addTimestampedVisionPose(Optional<TimestampedVisionPose> visionPose) {
+  if (visionPose.isPresent()) {
+    TimestampedVisionPose realVisionPose = visionPose.get();
+    poseEstimator.addVisionMeasurement(realVisionPose.poseMeters(), realVisionPose.timestampSecs()); 
+  }
+  else {
+    
+  }
 }
 
   /**
