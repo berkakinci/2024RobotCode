@@ -22,10 +22,10 @@ public class AprilTagVision extends SubsystemBase {
     private final AprilTagVisionIO frontCameraIO;
     private final AprilTagVisionIOInputsAutoLogged frontCameraInputs = new AprilTagVisionIOInputsAutoLogged();
 
-    private final Consumer<TimestampedVisionPose> visionPoseConsumer;
+    public final Consumer<TimestampedVisionPose> visionPoseConsumer;
     private final VisionPoseAcceptor poseAcceptor;
 
-    public Optional<TimestampedVisionPose> latestPose;
+    public static Optional<TimestampedVisionPose> latestPose;
 
     private TimestampedVisionPose frontPose =
             new TimestampedVisionPose(-1, new Pose2d(), new int[0], new Pose2d[0], true);
@@ -73,7 +73,7 @@ public class AprilTagVision extends SubsystemBase {
                     true);
         }
 
-        /*Optional<TimestampedVisionPose>*/ latestPose = getEstimatedPose();
+        latestPose = getEstimatedPose();
         latestPose.ifPresent(visionPose -> Logger.recordOutput("Vision/EstimatedPose", visionPose.poseMeters()));
         latestPose.ifPresent(visionPoseConsumer);
     }
