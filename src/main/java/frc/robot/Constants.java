@@ -82,7 +82,7 @@ public final class Constants
     }*/
 
     public static class Vision {
-        public static final String FRONT_CAMERA_NAME = "limelight-front";
+        public static final String FRONT_CAMERA_NAME = "limelight";
 
         // TODO: measure these offsets
         public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.2774, 0, 0.2271, new Rotation3d(0,0.559,0));

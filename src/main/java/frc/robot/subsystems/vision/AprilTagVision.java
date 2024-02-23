@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.littletonrobotics.junction.Logger;
+//import org.littletonrobotics.junction.Logger;
 import frc.robot.utils.vision.TimestampedVisionPose;
 import frc.robot.utils.vision.VisionPoseAcceptor;
 
@@ -42,6 +42,8 @@ public class AprilTagVision extends SubsystemBase {
         this.frontCameraIO = frontCameraIO;
         this.visionPoseConsumer = visionPoseConsumer;
         this.poseAcceptor = poseAcceptor;
+
+        latestPose = getEstimatedPose();
     }
 
     public static AprilTagVision createAprilTagVision(Consumer<TimestampedVisionPose> visionPoseConsumer,
@@ -63,7 +65,7 @@ public class AprilTagVision extends SubsystemBase {
         );
 
         frontCameraIO.updateInputs(frontCameraInputs);
-        Logger.processInputs("Vision/FrontCamera", frontCameraInputs);
+        //Logger.processInputs("Vision/FrontCamera", frontCameraInputs);
         if (frontCameraInputs.lastMeasurementTimestampSecs > frontPose.timestampSecs()) {
             frontPose = new TimestampedVisionPose(
                     frontCameraInputs.lastMeasurementTimestampSecs,
@@ -74,7 +76,7 @@ public class AprilTagVision extends SubsystemBase {
         }
 
         latestPose = getEstimatedPose();
-        latestPose.ifPresent(visionPose -> Logger.recordOutput("Vision/EstimatedPose", visionPose.poseMeters()));
+        //latestPose.ifPresent(visionPose -> Logger.recordOutput("Vision/EstimatedPose", visionPose.poseMeters()));
         latestPose.ifPresent(visionPoseConsumer);
     }
 

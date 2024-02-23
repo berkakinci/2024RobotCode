@@ -2,11 +2,11 @@ package frc.robot.subsystems.vision;
 
 import java.lang.Cloneable;
 import java.lang.Override;
-import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
+//import org.littletonrobotics.junction.LogTable;
+//import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public class AprilTagVisionIOInputsAutoLogged extends AprilTagVisionIO.AprilTagVisionIOInputs implements LoggableInputs, Cloneable {
-  @Override
+public class AprilTagVisionIOInputsAutoLogged extends AprilTagVisionIO.AprilTagVisionIOInputs implements Cloneable {
+  /*@Override
   public void toLog(LogTable table) {
     table.put("EstimatedPoseMeters", estimatedPoseMeters);
     table.put("SeenTagIDs", seenTagIDs);
@@ -20,7 +20,7 @@ public class AprilTagVisionIOInputsAutoLogged extends AprilTagVisionIO.AprilTagV
     seenTagIDs = table.get("SeenTagIDs", seenTagIDs);
     tagPosesMeters = table.get("TagPosesMeters", tagPosesMeters);
     lastMeasurementTimestampSecs = table.get("LastMeasurementTimestampSecs", lastMeasurementTimestampSecs);
-  }
+  }*/
 
   public AprilTagVisionIOInputsAutoLogged clone() {
     AprilTagVisionIOInputsAutoLogged copy = new AprilTagVisionIOInputsAutoLogged();
