@@ -10,7 +10,6 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -22,9 +21,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 import frc.robot.utils.vision.TimestampedVisionPose;
 import frc.robot.utils.vision.VisionPoseAcceptor;
@@ -116,7 +115,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     AutoBuilder.configureHolonomic(
     this::getPose,
-    this::resetOdometry,
+    this::setPose,
     this::getRobotVelocity,
     this::drive,
     Constants.pathFollowerConfig,
