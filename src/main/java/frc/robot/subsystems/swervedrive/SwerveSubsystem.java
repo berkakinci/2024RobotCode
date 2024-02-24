@@ -10,6 +10,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,7 +18,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.TimeSyncEventData;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -32,19 +34,14 @@ import java.io.File;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-//import org.littletonrobotics.junction.AutoLogOutput;
-
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
-//import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
-
-//import swervelib.parser.SwerveDriveConfiguration;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -71,7 +68,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private Rotation2d rawGyroRotation = new Rotation2d();
   private Consumer<TimestampedVisionPose> visionPoseConsumer = SwerveSubsystem::updatePose;
   
-
+  StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose Export", Pose2d.struct).publish();
   
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -93,6 +90,7 @@ public class SwerveSubsystem extends SubsystemBase {
     System.out.println("\t\"drive\": " + driveConversionFactor);
     System.out.println("}");
 
+    
     
     //Consumer<TimestampedVisionPose> poseConsumer;
 
@@ -200,6 +198,8 @@ public class SwerveSubsystem extends SubsystemBase {
     poseEstimator.update(rawGyroRotation, getModulePositions());
 
     addTimestampedVisionPose(AprilTagVision.latestPose);
+
+    publisher.set(poseEstimator.getEstimatedPosition());
     
   }
 

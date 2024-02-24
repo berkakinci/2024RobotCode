@@ -65,22 +65,6 @@ public final class Constants
     public static final double LEFT_Y_DEADBAND = 0.01;
   }
 
-  /*public static class Vision {
-        public static final String kCameraName = "photonvision";
-        // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-        public static final Transform3d kRobotToCam =
-                new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
-
-        // The layout of the AprilTags on the field
-        public static final AprilTagFieldLayout kTagLayout =
-                AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-
-        // The standard deviations of our vision estimated poses, which affect correction rate
-        // (Fake values. Experiment and determine estimation noise on an actual robot.)
-        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-    }*/
-
     public static class Vision {
         public static final String FRONT_CAMERA_NAME = "limelight";
 
@@ -93,7 +77,6 @@ public final class Constants
         public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
         public static final double MIN_ACCEPTED_NUM_TAGS = 1;
         public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
-        public static final double MAX_ACCEPTED_ELEVATOR_SPEED_MPS = 0.05;
 
         public static final int SIM_RES_WIDTH = 1280;
         public static final int SIM_RES_HEIGHT = 960;

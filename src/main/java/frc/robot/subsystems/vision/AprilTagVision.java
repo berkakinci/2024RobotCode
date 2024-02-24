@@ -2,7 +2,7 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.wpilibj.DriverStation;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //import org.littletonrobotics.junction.Logger;
 import frc.robot.utils.vision.TimestampedVisionPose;
@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Consumer;
 //import java.util.function.Supplier;
-import java.util.function.Supplier;
 
 import static frc.robot.Constants.Vision.FRONT_CAMERA_POSE;
 import static frc.robot.Constants.Vision.FRONT_CAMERA_NAME;
@@ -76,7 +75,6 @@ public class AprilTagVision extends SubsystemBase {
         }
 
         latestPose = getEstimatedPose();
-        //latestPose.ifPresent(visionPose -> Logger.recordOutput("Vision/EstimatedPose", visionPose.poseMeters()));
         latestPose.ifPresent(visionPoseConsumer);
     }
 

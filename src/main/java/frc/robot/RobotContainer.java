@@ -21,11 +21,6 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-//import frc.robot.subsystems.vision.AprilTagVision;
-//import frc.robot.utils.vision.VisionPoseAcceptor;
-//import swervelib.SwerveDrive;
-import frc.robot.subsystems.vision.AprilTagVision;
-import frc.robot.utils.vision.VisionPoseAcceptor;
 
 import java.io.File;
 
@@ -42,11 +37,7 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve/neo"));
-  // CommandJoystick rotationController = new CommandJoystick(1);
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  //static CommandJoystick driverController = new CommandJoystick(0);
 
-  // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT);
   static XboxController driverXbox = new XboxController(0);
 
   /**
@@ -55,24 +46,18 @@ public class RobotContainer
 
   private final SendableChooser<Command> autoChooser;
 
-  //public AprilTagVision aprilTagVision;
-
   public RobotContainer()
   {
     // Configure the trigger bindings
     configureBindings();
 
-    /*aprilTagVision = AprilTagVision.createReal(
-                        SwerveDrive::addVisionMeasurement,
-                        new VisionPoseAcceptor(drivetrain::getChassisSpeeds, () -> 0.0));*/
-
     AbsoluteDrive closedAbsoluteDrive = new AbsoluteDrive(drivebase,
       // Applies deadbands and inverts controls because joysticks
       // are back-right positive while robot
       // controls are front-left positive
-      () -> MathUtil.applyDeadband(0.8*(-driverXbox.getRightY()),
+      () -> MathUtil.applyDeadband((-driverXbox.getRightY()),
         OperatorConstants.LEFT_Y_DEADBAND),
-      () -> MathUtil.applyDeadband(0.8*(-driverXbox.getRightX()),
+      () -> MathUtil.applyDeadband((-driverXbox.getRightX()),
         OperatorConstants.LEFT_X_DEADBAND),
       () -> -driverXbox.getLeftX(),
       () -> -driverXbox.getLeftY());
@@ -96,9 +81,7 @@ public class RobotContainer
         () -> -driverXbox.getRightX(), () -> true);
 
     drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedFieldAbsoluteDrive);
-  
-    //aprilTagVision = AprilTagVision.createAprilTagVision(drivebase::addTimestampedVisionPose, new VisionPoseAcceptor(drivebase::getRobotVelocity));
-
+    
     autoChooser = AutoBuilder.buildAutoChooser(); //default auto will be "Commands.non()"
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
