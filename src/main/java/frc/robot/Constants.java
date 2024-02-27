@@ -57,6 +57,11 @@ public final class Constants
     public static final double WHEEL_LOCK_TIME = 10; // seconds
   }
 
+  public static final class Climber {
+    public static final double MAX_HEIGHT_LEFT_ENCODER_VALUE = 100;
+    public static final double MAX_HEIGHT_RIGHT_ENCODER_VALUE = 100; //TODO: replace these dummy values with real ones
+  }
+
   public static class OperatorConstants
   {
 
