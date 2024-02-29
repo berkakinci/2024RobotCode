@@ -9,43 +9,55 @@ import frc.robot.Constants.Climber;
 
 public class climberSubsystem extends SubsystemBase{
 
-    private final static CANSparkMax climberMotorLeft = new CANSparkMax(22, MotorType.kBrushless);
-    private final static CANSparkMax climberMotorRight = new CANSparkMax(21, MotorType.kBrushless);
+    private final CANSparkMax climberMotorLeft = new CANSparkMax(22, MotorType.kBrushless);
+    private final CANSparkMax climberMotorRight = new CANSparkMax(21, MotorType.kBrushless);
 
-    private final static RelativeEncoder climberMotorLeftRelativeEncoder = climberMotorLeft.getEncoder();
-    private final static RelativeEncoder climberMotorRightRelativeEncoder = climberMotorRight.getEncoder();
+    private final RelativeEncoder climberMotorLeftRelativeEncoder = climberMotorLeft.getEncoder();
+    private final RelativeEncoder climberMotorRightRelativeEncoder = climberMotorRight.getEncoder();
 
-    private final static DigitalInput climberLeftLimitSwitch = new DigitalInput(2);
-    private final static DigitalInput climberRightLimitSwitch = new DigitalInput(1);
-
-    public static boolean position = false;
+    private final DigitalInput climberLeftLimitSwitch = new DigitalInput(2);
+    private final DigitalInput climberRightLimitSwitch = new DigitalInput(1);
 
     public climberSubsystem() {
 
     }
 
-    public static void setClimberPosition(boolean Position) {
-
-        position = Position;
-        
-    }
-
-    public void periodic() { //false is down, true is up for position
-
-        if (position && climberMotorLeftRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_LEFT_ENCODER_VALUE && climberMotorRightRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_RIGHT_ENCODER_VALUE) {
-            climberMotorLeft.set(-0.7);
-            climberMotorRight.set(0.7);
-        }
-        
-        if (!position && !climberLeftLimitSwitch.get() && !climberRightLimitSwitch.get()) {
+    public void setClimberDown() {
+         if (!climberLeftLimitSwitch.get() && !climberRightLimitSwitch.get()) {
             climberMotorLeft.set(0.7);
             climberMotorRight.set(-0.7);
         }
-        
+    }
+
+    public void setClimberUp() {
+        if (climberMotorLeftRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_LEFT_ENCODER_VALUE && climberMotorRightRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_RIGHT_ENCODER_VALUE) {
+            climberMotorLeft.set(-0.7);
+            climberMotorRight.set(0.7);
+        }
+    }
+
+    public void setClimberNeutral() {
+        climberMotorLeft.set(0);
+        climberMotorRight.set(0);
     }
 
     public void zeroEncoders() {
         climberMotorLeftRelativeEncoder.setPosition(0);
+        climberMotorRightRelativeEncoder.setPosition(0);
+
+    }
+
+    public boolean getDown() {
+        if (climberLeftLimitSwitch.get() && climberRightLimitSwitch.get()){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
+    public void periodic() {
 
     }
 
