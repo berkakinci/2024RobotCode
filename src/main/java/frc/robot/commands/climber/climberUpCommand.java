@@ -8,7 +8,7 @@ public class climberUpCommand extends Command {
     private final climberSubsystem m_ClimberSubsystem;
     public climberUpCommand(climberSubsystem subsystem) {
         m_ClimberSubsystem = subsystem;
-        addRequirements(subsystem);
+        addRequirements(m_ClimberSubsystem);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class climberUpCommand extends Command {
     }
 
     @Override
-    public void end (boolean interruputed) {
+    public void end (boolean interrupted) {
         m_ClimberSubsystem.setClimberNeutral();
     }
 }

@@ -3,21 +3,24 @@ package frc.robot.commands.climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.climber.climberSubsystem;
 
-public class climberDownCommand extends Command {
+public class climberZeroCommand extends Command {
 
     private final climberSubsystem m_ClimberSubsystem;
-    public climberDownCommand(climberSubsystem subsystem) {
+    public climberZeroCommand(climberSubsystem subsystem) {
         m_ClimberSubsystem = subsystem;
         addRequirements(m_ClimberSubsystem);
     }
 
     @Override
     public void initialize() {
-    
-    }
+        m_ClimberSubsystem.zeroEncoders();
+    }  
 
     @Override
     public void execute() {
-        m_ClimberSubsystem.setClimberDown();
+    }
+
+    @Override
+    public void end (boolean interrupted) {
     }
 }

@@ -62,6 +62,11 @@ public final class Constants
     public static final double MAX_HEIGHT_RIGHT_ENCODER_VALUE = 100; //TODO: replace these dummy values with real ones
   }
 
+  public static final class Arm {
+    public static final int kLeftMotorPort = 26;
+    public static final int kRightMotorPort = 25;
+  }
+
   public static class OperatorConstants
   {
 
