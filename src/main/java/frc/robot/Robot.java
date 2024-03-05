@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.climber.climberZeroCommand;
+import frc.robot.subsystems.climber.climberSubsystem;
+
 import java.io.File;
 import java.io.IOException;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -58,6 +61,8 @@ public class Robot extends TimedRobot {
 
     PortForwarder.add(5800, "limelight.local", 5800);
     PortForwarder.add(1182, "limelight.local", 1182);
+    m_robotContainer.climberZeroCommand().schedule();
+
   }
   @Override
   public void robotPeriodic() {

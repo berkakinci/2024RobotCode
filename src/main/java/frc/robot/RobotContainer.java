@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.climber.climberDownCommand;
 import frc.robot.commands.climber.climberUpCommand;
+import frc.robot.commands.climber.climberZeroCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
@@ -119,6 +120,10 @@ public class RobotContainer
    */
   public Command getAutonomousCommand(){
     return autoChooser.getSelected();
+  }
+
+  public Command climberZeroCommand(){
+    return new climberZeroCommand(climber);
   }
 
   public void setDriveMode()
