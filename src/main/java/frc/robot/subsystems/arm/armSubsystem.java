@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-/* 
+/*
 package frc.robot.subsystems.arm;
 
 import com.revrobotics.AbsoluteEncoder;
@@ -38,7 +38,7 @@ public class armSubsystem extends ProfiledPIDSubsystem {
             0,
             0,
             new TrapezoidProfile.Constraints(
-                ArmConstants.kMaxVelocityRadPerSecond,
+                Arm.kMaxVelocityRadPerSecond,
                 ArmConstants.kMaxAccelerationRadPerSecSquared)),
         0);
     m_encoder.setDistancePerPulse(ArmConstants.kEncoderDistancePerPulse);
@@ -48,7 +48,7 @@ public class armSubsystem extends ProfiledPIDSubsystem {
 
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
-    // Calculate the feedforward from the sepoint
+    // Calculate the feedforward from the setpoint
     double feedforward = m_feedforward.calculate(setpoint.position, setpoint.velocity);
     // Add the feedforward to the PID output to get the motor output
     m_motor.setVoltage(output + feedforward);

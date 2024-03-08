@@ -65,6 +65,7 @@ public final class Constants
   public static final class Arm {
     public static final int kLeftMotorPort = 26;
     public static final int kRightMotorPort = 25;
+    public static final int kMaxVelocityRadPerSecond = 1;
   }
 
   public static class OperatorConstants
