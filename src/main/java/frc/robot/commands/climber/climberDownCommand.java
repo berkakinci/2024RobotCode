@@ -18,6 +18,16 @@ public class climberDownCommand extends Command {
 
     @Override
     public void execute() {
-        m_ClimberSubsystem.setClimberDown();
+            m_ClimberSubsystem.setClimberDown();
     }
+
+    @Override
+    public void end (boolean interrupted) {
+        m_ClimberSubsystem.setClimberNeutral();
+    }
+
+    @Override
+    public boolean isFinished(){
+    return m_ClimberSubsystem.getDown();
+}
 }

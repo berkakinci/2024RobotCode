@@ -15,8 +15,8 @@ public class climberSubsystem extends SubsystemBase{
     private final RelativeEncoder climberMotorLeftRelativeEncoder = climberMotorLeft.getEncoder();
     private final RelativeEncoder climberMotorRightRelativeEncoder = climberMotorRight.getEncoder();
 
-    private final DigitalInput climberLeftLimitSwitch = new DigitalInput(2);
-    private final DigitalInput climberRightLimitSwitch = new DigitalInput(1);
+    private final DigitalInput climberLeftLimitSwitch = new DigitalInput(3);
+    private final DigitalInput climberRightLimitSwitch = new DigitalInput(2);
 
     public climberSubsystem() {
 
@@ -48,7 +48,16 @@ public class climberSubsystem extends SubsystemBase{
     }
 
     public boolean getDown() {
-        if (climberLeftLimitSwitch.get() && climberRightLimitSwitch.get()){
+        if (climberLeftLimitSwitch.get() || climberRightLimitSwitch.get()){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean getUp() {
+        if (climberMotorLeftRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_LEFT_ENCODER_VALUE && climberMotorRightRelativeEncoder.getPosition() > Climber.MAX_HEIGHT_RIGHT_ENCODER_VALUE) {
             return true;
         }
         else {

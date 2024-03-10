@@ -80,7 +80,7 @@ public final class Constants
         public static final String FRONT_CAMERA_NAME = "limelight";
 
         // TODO: measure these offsets
-        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(0.2774, 0, 0.2271, new Rotation3d(0,0.559,0));
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(-0.2774, 0, 0.2271, new Rotation3d(0,Math.toRadians(147.972),0)); //old pitch 0.559 rad
 
         // TODO: find these values
         public static final double MAX_VISION_DELAY_SECS = 0.08;

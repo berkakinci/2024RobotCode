@@ -25,4 +25,16 @@ public class climberUpCommand extends Command {
     public void end (boolean interrupted) {
         m_ClimberSubsystem.setClimberNeutral();
     }
+
+    @Override
+    public boolean isFinished(){
+    if (m_ClimberSubsystem.getUp()) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+    
+
 }

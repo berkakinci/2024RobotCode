@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -18,12 +19,17 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.arm.intakeCommand;
+import frc.robot.commands.arm.outtakeCommand;
+import frc.robot.commands.arm.unguidedShooterCommand;
 import frc.robot.commands.climber.climberDownCommand;
 import frc.robot.commands.climber.climberUpCommand;
 import frc.robot.commands.climber.climberZeroCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
+import frc.robot.subsystems.arm.intakeSubsystem;
+import frc.robot.subsystems.arm.shooterSubsystem;
 import frc.robot.subsystems.climber.climberSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
@@ -44,9 +50,17 @@ public class RobotContainer
                                                                          "swerve/neo"));
 
   private final climberSubsystem climber = new climberSubsystem();
+  private final intakeSubsystem intake = new intakeSubsystem();
+  private final shooterSubsystem shooter = new shooterSubsystem();
 
-  static XboxController driverXbox = new XboxController(0);
-  static XboxController operatorXbox = new XboxController(1);
+  private final Command climberUp = new climberUpCommand(climber);
+  private final Command climberDown = new climberDownCommand(climber);
+  private final Command intakeNote = new intakeCommand(intake);
+  private final Command outtakeNote = new outtakeCommand(intake);
+  private final Command unguidedShoot = new unguidedShooterCommand(shooter);
+
+  static CommandXboxController driverXbox = new CommandXboxController(0);
+  static CommandXboxController operatorXbox = new CommandXboxController(1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -106,10 +120,15 @@ public class RobotContainer
   {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    new JoystickButton(driverXbox, 1).onTrue((new InstantCommand(drivebase::zeroGyro)));
-    new JoystickButton (driverXbox, 2).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
-    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
-    new POVButton(driverXbox, 0).whileTrue(new RepeatCommand(new climberUpCommand(climber))).whileFalse(new RepeatCommand(new climberDownCommand(climber)));
+    driverXbox.a().onTrue((new InstantCommand(drivebase::zeroGyro)));
+    driverXbox.y().onTrue(new InstantCommand(drivebase::addFakeVisionReading));
+    driverXbox.x().whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
+    driverXbox.povUp().whileTrue(climberUp);
+    //driverXbox.povUp().whileFalse(climberDown);
+    driverXbox.povDown().whileTrue(climberDown);
+    driverXbox.leftBumper().whileTrue(intakeNote);
+    driverXbox.rightBumper().whileTrue(outtakeNote);
+    driverXbox.rightTrigger().whileTrue(unguidedShoot);
   
   }
 
