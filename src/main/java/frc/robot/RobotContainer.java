@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.arm.intakeCommand;
 import frc.robot.commands.arm.outtakeCommand;
+import frc.robot.commands.arm.shooterInitCommand;
 import frc.robot.commands.arm.unguidedShooterCommand;
 import frc.robot.commands.climber.climberDownCommand;
 import frc.robot.commands.climber.climberUpCommand;
@@ -143,6 +144,10 @@ public class RobotContainer
 
   public Command climberZeroCommand(){
     return new climberZeroCommand(climber);
+  }
+
+  public Command shooterInitCommand() {
+    return new shooterInitCommand(shooter);
   }
 
   public void setDriveMode()

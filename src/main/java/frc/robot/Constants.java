@@ -66,6 +66,9 @@ public final class Constants
     public static final int kLeftMotorPort = 26;
     public static final int kRightMotorPort = 25;
     public static final int kMaxVelocityRadPerSecond = 1;
+    public static final double kGVolts = 0.18;
+    public static final double kVVoltSecondPerRad = 11.13;
+    public static final double kAVoltSecondSquaredPerRad = 0.01;
   }
 
   public static class OperatorConstants

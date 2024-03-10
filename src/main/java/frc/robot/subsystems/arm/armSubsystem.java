@@ -4,46 +4,40 @@
 /*
 package frc.robot.subsystems.arm;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.Constants.Arm;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
 // A robot arm subsystem that moves with a motion profile.
 public class armSubsystem extends ProfiledPIDSubsystem {
   private final CANSparkMax leftMotor = new CANSparkMax(Arm.kLeftMotorPort, MotorType.kBrushless);
   private final CANSparkMax rightMotor = new CANSparkMax(Arm.kRightMotorPort, MotorType.kBrushless);
-  private final SparkAbsoluteEncoder m_encoder =
-      new SparkAbsoluteEncoder(ArmConstants.kEncoderPorts[0], ArmConstants.kEncoderPorts[1]);
+  private final DutyCycleEncoder m_encoder = new DutyCycleEncoder(4);
   private final ArmFeedforward m_feedforward =
       new ArmFeedforward(
-          ArmConstants.kSVolts, ArmConstants.kGVolts,
-          ArmConstants.kVVoltSecondPerRad, ArmConstants.kAVoltSecondSquaredPerRad);
+          Arm.kSVolts, Arm.kGVolts,
+          Arm.kVVoltSecondPerRad, Arm.kAVoltSecondSquaredPerRad);
 
   // Create a new ArmSubsystem. 
   public armSubsystem() {
     super(
         new ProfiledPIDController(
-            ArmConstants.kP,
+            Arm.kP,
             0,
             0,
             new TrapezoidProfile.Constraints(
                 Arm.kMaxVelocityRadPerSecond,
-                ArmConstants.kMaxAccelerationRadPerSecSquared)),
+                Arm.kMaxAccelerationRadPerSecSquared)),
         0);
-    m_encoder.setDistancePerPulse(ArmConstants.kEncoderDistancePerPulse);
+    m_encoder.setDistancePerPulse(Arm.kEncoderDistancePerPulse);
     // Start arm at rest in neutral position
-    setGoal(ArmConstants.kArmOffsetRads);
+    setGoal(Arm.kArmOffsetRads);
   }
 
   @Override

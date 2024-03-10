@@ -24,7 +24,7 @@ public class shooterSubsystem extends SubsystemBase {
 
     private static double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(0);
     private static final double kFlywheelGearing = 1.0;
-    private static final double kFlywheelMomentOfInertia = -0.005; //kg * m^2
+    private static final double kFlywheelMomentOfInertia = 0.005; //kg * m^2
 
   // The plant holds a state-space model of our flywheel. This system has the following properties:
   //
@@ -66,6 +66,7 @@ public class shooterSubsystem extends SubsystemBase {
 
     public void initFlywheel() {
         m_loop.reset(VecBuilder.fill(Units.rotationsPerMinuteToRadiansPerSecond(shooterEncoder.getVelocity())));
+        shooterMotor.setInverted(true);
     }
 
     public shooterSubsystem () {
@@ -77,17 +78,17 @@ public class shooterSubsystem extends SubsystemBase {
     }
 
     public void guidedShoot(double desiredSpeed) { //pass in desired rpm and convert to radians
-        kSpinupRadPerSec = desiredSpeed;
+        kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(desiredSpeed);
     }
 
     public void stop() {
-        shooterMotor.set(0);
+        kSpinupRadPerSec = 0;
     }
 
 
     @Override
     public void periodic() {
-        System.out.println("shooter speed: " + ((shooterEncoder.getVelocity()*(Math.PI*0.1016))/60 )+ " m/s");
+        //System.out.println("shooter speed: " + ((shooterEncoder.getVelocity()*(Math.PI*0.1016))/60 )+ " m/s");
         
         m_loop.setNextR(VecBuilder.fill(kSpinupRadPerSec));
 
@@ -96,7 +97,7 @@ public class shooterSubsystem extends SubsystemBase {
         m_loop.predict(0.020);
 
         double nextVoltage = m_loop.getU(0);
-        shooterMotor.setVoltage(nextVoltage);
+        shooterMotor.setVoltage(-nextVoltage);
 
     
     }
