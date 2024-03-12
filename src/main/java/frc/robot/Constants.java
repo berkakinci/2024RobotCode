@@ -74,6 +74,7 @@ public final class Constants
     public static final double kP = 0;
     public static final double kMaxAccelerationRadPerSecSquared = 1;
     public static final double kArmOffsetRads = 1;
+    public static final double kEncoderDistancePerPulse = 2*Math.PI;
   }
 
   public static class OperatorConstants
