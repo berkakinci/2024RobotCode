@@ -125,7 +125,6 @@ public class RobotContainer
     driverXbox.y().onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     driverXbox.x().whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
     driverXbox.povUp().whileTrue(climberUp);
-    //driverXbox.povUp().whileFalse(climberDown);
     driverXbox.povDown().whileTrue(climberDown);
     driverXbox.leftBumper().whileTrue(intakeNote);
     driverXbox.rightBumper().whileTrue(outtakeNote);

@@ -14,7 +14,6 @@ import edu.wpi.first.math.system.LinearSystemLoop;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class shooterSubsystem extends SubsystemBase {
@@ -22,9 +21,9 @@ public class shooterSubsystem extends SubsystemBase {
     private final CANSparkMax shooterMotor = new CANSparkMax(28, MotorType.kBrushless);
     private final RelativeEncoder shooterEncoder = shooterMotor.getEncoder();
 
-    private static double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(0);
+    public static double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(0);
     private static final double kFlywheelGearing = 1.0;
-    private static final double kFlywheelMomentOfInertia = 0.005; //kg * m^2
+    private static final double kFlywheelMomentOfInertia = .0018366666; //kg * m^2
 
   // The plant holds a state-space model of our flywheel. This system has the following properties:
   //
@@ -50,7 +49,7 @@ public class shooterSubsystem extends SubsystemBase {
   private final LinearQuadraticRegulator<N1, N1, N1> m_controller =
       new LinearQuadraticRegulator<>(
           m_flywheelPlant,
-          VecBuilder.fill(8.0), // qelms. Velocity error tolerance, in radians per second. Decrease
+          VecBuilder.fill(80.0), // qelms. Velocity error tolerance, in radians per second. Decrease
           // this to more heavily penalize state excursion, or make the controller behave more
           // aggressively.
           VecBuilder.fill(12.0), // relms. Control effort (voltage) tolerance. Decrease this to more
@@ -66,7 +65,6 @@ public class shooterSubsystem extends SubsystemBase {
 
     public void initFlywheel() {
         m_loop.reset(VecBuilder.fill(Units.rotationsPerMinuteToRadiansPerSecond(shooterEncoder.getVelocity())));
-        shooterMotor.setInverted(true);
     }
 
     public shooterSubsystem () {
@@ -78,7 +76,7 @@ public class shooterSubsystem extends SubsystemBase {
     }
 
     public void guidedShoot(double desiredSpeed) { //pass in desired rpm and convert to radians
-        kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(desiredSpeed);
+        kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(-desiredSpeed);
     }
 
     public void stop() {
@@ -97,7 +95,7 @@ public class shooterSubsystem extends SubsystemBase {
         m_loop.predict(0.020);
 
         double nextVoltage = m_loop.getU(0);
-        shooterMotor.setVoltage(-nextVoltage);
+        shooterMotor.setVoltage(nextVoltage);
 
     
     }

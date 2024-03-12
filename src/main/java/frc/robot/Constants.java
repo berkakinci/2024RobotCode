@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 //import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 //import edu.wpi.first.math.numbers.N1;
 //import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -69,6 +70,10 @@ public final class Constants
     public static final double kGVolts = 0.18;
     public static final double kVVoltSecondPerRad = 11.13;
     public static final double kAVoltSecondSquaredPerRad = 0.01;
+    public static final double kSVolts = 0; //try 0.8 if it doesn't work
+    public static final double kP = 0;
+    public static final double kMaxAccelerationRadPerSecSquared = 1;
+    public static final double kArmOffsetRads = 1;
   }
 
   public static class OperatorConstants

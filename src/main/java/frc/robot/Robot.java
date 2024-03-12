@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 //import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -35,8 +36,9 @@ public class Robot extends TimedRobot {
 
   private Timer disabledTimer;
 
-  private UsbCamera frontCamera;
-  private UsbCamera upCamera;
+  public UsbCamera frontCamera;
+
+  private DutyCycleEncoder encoder = new DutyCycleEncoder(4);
 
   public Robot() {
     instance = this;
@@ -63,7 +65,6 @@ public class Robot extends TimedRobot {
     disabledTimer = new Timer();
 
     frontCamera = CameraServer.startAutomaticCapture(0);
-    upCamera = CameraServer.startAutomaticCapture(1);
 
     PortForwarder.add(5800, "limelight.local", 5800);
     PortForwarder.add(1182, "limelight.local", 1182);
@@ -75,6 +76,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
+    System.out.println("Arm position: " + encoder.getAbsolutePosition());
 
   }
   @Override

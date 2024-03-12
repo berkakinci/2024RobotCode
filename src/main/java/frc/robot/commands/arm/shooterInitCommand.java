@@ -17,6 +17,11 @@ public class shooterInitCommand extends Command {
         m_ShooterSubsystem.initFlywheel();
     }
 
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
    
     
 }
