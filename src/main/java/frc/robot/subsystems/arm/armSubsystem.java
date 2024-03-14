@@ -35,7 +35,7 @@ public class armSubsystem extends ProfiledPIDSubsystem {
             0,
             new TrapezoidProfile.Constraints(
                 Arm.kMaxVelocityRadPerSecond,
-                Arm.kMaxAccelerationRadPerSecSquared)), Arm.kStartingPos
+                Arm.kMaxAccelerationRadPerSecSquared))//, Arm.kStartingPos
                 );//add 0 
     m_encoder.setPositionOffset(0.386);
     m_encoder.setDistancePerRotation(Arm.kEncoderDistancePerRotation);
@@ -44,6 +44,8 @@ public class armSubsystem extends ProfiledPIDSubsystem {
     // Start arm at rest in neutral position
     //setGoal(Arm.kArmOffsetRads);
     setGoal(Arm.kStartingPos);
+
+    //enable();
   }
 
   @Override
@@ -53,18 +55,14 @@ public class armSubsystem extends ProfiledPIDSubsystem {
     // Add the feedforward to the PID output to get the motor output
     leftMotor.setVoltage(output + feedforward);
     rightMotor.setVoltage(output + feedforward);
+    System.out.println("Absolute position encoder measurement: " + getMeasurement());
     
   }
 
   @Override
   public double getMeasurement() {
-    return m_encoder.getDistance(); //+ Arm.kArmOffsetRads;
-  }
-
-  @Override
-  public void periodic() {
-    //System.out.println("Encoder absolute position: " + m_encoder.getAbsolutePosition()*Math.PI*2);
-    //System.out.println("Encoder measurement: " + getMeasurement());
+    return Math.PI*2*(m_encoder.getAbsolutePosition()-m_encoder.getPositionOffset()); //+ Arm.kArmOffsetRads;
     
   }
+
 }

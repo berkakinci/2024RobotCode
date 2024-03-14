@@ -14,12 +14,10 @@ public class startingPosCommand extends Command {
 
     @Override
     public void initialize() {
-        //m_ArmSubsystem.setGoal(Arm.kStartingPos);
-        m_ArmSubsystem.enable();
+        m_ArmSubsystem.setGoal(Arm.kStartingPos);
+        if (!m_ArmSubsystem.isEnabled()) {
+            m_ArmSubsystem.enable();
+        }
     }
 
-    @Override
-    public void execute() {
-        m_ArmSubsystem.setGoal(Arm.kStartingPos);
-    }
 }

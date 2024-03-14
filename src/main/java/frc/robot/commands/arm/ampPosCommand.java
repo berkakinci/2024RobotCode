@@ -14,14 +14,11 @@ public class ampPosCommand extends Command {
 
     @Override
     public void initialize() {
-        //m_ArmSubsystem.setGoal(Arm.kAmpShootPos);
-        m_ArmSubsystem.enable();
-    }
-
-    @Override 
-    public void execute() {
         m_ArmSubsystem.setGoal(Arm.kAmpShootPos);
+        if (!m_ArmSubsystem.isEnabled()) {
+            m_ArmSubsystem.enable();
+        }
+        
     }
-
     
 }

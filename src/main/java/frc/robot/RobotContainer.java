@@ -6,27 +6,21 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.Arm;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.arm.ampPosCommand;
 import frc.robot.commands.arm.climbingPosCommand;
-import frc.robot.commands.arm.genPosCommand;
 import frc.robot.commands.arm.intakeCommand;
 import frc.robot.commands.arm.outtakeCommand;
 import frc.robot.commands.arm.shooterInitCommand;
+import frc.robot.commands.arm.speakerPosCommand;
 import frc.robot.commands.arm.startingPosCommand;
 import frc.robot.commands.arm.unguidedShooterCommand;
 import frc.robot.commands.climber.climberDownCommand;
@@ -64,8 +58,6 @@ public class RobotContainer
   private final shooterSubsystem shooter = new shooterSubsystem();
   private final armSubsystem arm = new armSubsystem();
 
-  private double desiredPos;
-
   //private Command genArmPos = new genPosCommand(arm, desiredPos);
   private final Command climberUp = new climberUpCommand(climber);
   private final Command climberDown = new climberDownCommand(climber);
@@ -76,6 +68,7 @@ public class RobotContainer
   private final Command ampPos = new ampPosCommand(arm);
   private final Command climbingPos = new climbingPosCommand(arm);
   private final Command startingPos = new startingPosCommand(arm);
+  private final Command speakerPos = new speakerPosCommand(arm);
   //add in speaker shoot
 
   static CommandXboxController driverXbox = new CommandXboxController(0);
@@ -149,8 +142,9 @@ public class RobotContainer
     driverXbox.rightTrigger().whileTrue(unguidedShoot);
 
     operatorXbox.a().onTrue(climbingPos);
-    operatorXbox.b().onTrue(ampPos);
+    operatorXbox.y().onTrue(ampPos);
     operatorXbox.x().onTrue(startingPos);
+    //operatorXbox.b().onTrue(speakerPos);
 
     //operatorXbox.a().onTrue(new climbingPosCommand(arm));
     //operatorXbox.b().onTrue(new ampPosCommand(arm));

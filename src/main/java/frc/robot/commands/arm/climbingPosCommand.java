@@ -14,13 +14,10 @@ public class climbingPosCommand extends Command {
 
     @Override
     public void initialize() {
-        //m_ArmSubsystem.setGoal(Arm.kClimbingPos);
-        m_ArmSubsystem.enable();
-    }
-
-    @Override
-    public void execute() {
-        m_ArmSubsystem.setGoal(Arm.kClimbingPos);
+        m_ArmSubsystem.setGoal(Arm.kClimbingandFrontSpeakerShootPos);
+        if (!m_ArmSubsystem.isEnabled()) {
+            m_ArmSubsystem.enable();
+        }
     }
     
 }

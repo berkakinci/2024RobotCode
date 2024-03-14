@@ -1,8 +1,8 @@
-/*package frc.robot.commands.arm;
+package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.Arm;
 import frc.robot.subsystems.arm.armSubsystem;
-import frc.robot.subsystems.arm.intakeSubsystem;
 
 public class speakerPosCommand extends Command {
 
@@ -14,12 +14,10 @@ public class speakerPosCommand extends Command {
 
     @Override
     public void initialize() {
-        m_ArmSubsystem.setGoal();
+        m_ArmSubsystem.setGoal(Arm.kClimbingandFrontSpeakerShootPos);
+        if (!m_ArmSubsystem.isEnabled()) {
+            m_ArmSubsystem.enable();
+        }
     }
 
-    public boolean isFinished() {
-        return true;
-    }
-    
 }
-*/

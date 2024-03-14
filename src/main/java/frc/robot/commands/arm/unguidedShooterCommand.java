@@ -1,7 +1,6 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.arm.intakeSubsystem;
 import frc.robot.subsystems.arm.shooterSubsystem;
 
 public class unguidedShooterCommand extends Command {
