@@ -2,24 +2,28 @@ package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.arm.armSubsystem;
-import frc.robot.Constants.Arm;
 
-public class startingPosCommand extends Command {
+public class genPosCommand extends Command {
 
     private final armSubsystem m_ArmSubsystem;
-    public startingPosCommand(armSubsystem subsystem) {
+    private double goal;
+    public genPosCommand(armSubsystem subsystem, double desiredPos) {
         m_ArmSubsystem = subsystem;
+        goal = desiredPos;
         addRequirements(m_ArmSubsystem);
     }
 
     @Override
     public void initialize() {
-        //m_ArmSubsystem.setGoal(Arm.kStartingPos);
+        //m_ArmSubsystem.setGoal(Arm.kAmpShootPos);
         m_ArmSubsystem.enable();
     }
 
-    @Override
+    @Override 
     public void execute() {
-        m_ArmSubsystem.setGoal(Arm.kStartingPos);
+        m_ArmSubsystem.setGoal(goal);
+        //m_ArmSubsystem.setGoal(Arm.kAmpShootPos);
     }
+
+    
 }

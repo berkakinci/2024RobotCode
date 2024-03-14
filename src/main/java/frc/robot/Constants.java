@@ -74,10 +74,10 @@ public final class Constants
     public static final double kP = 0;
     public static final double kMaxAccelerationRadPerSecSquared = 1;
     //public static final double kArmOffsetRads = Math.PI/2;
-    public static final double kEncoderDistancePerPulse = 2*Math.PI;
-    public static final double kStartingPos = 0.214*Math.PI*2;//0.610
-    public static final double kAmpShootPos = 0.269*Math.PI*2;//0.665
-    public static final double kClimbingPos = 0.396*Math.PI*2; //0.396
+    public static final double kEncoderDistancePerRotation = 2*Math.PI;
+    public static final double kStartingPos = Math.toRadians(75);//0.214*Math.PI*2;//0.610
+    public static final double kAmpShootPos = Math.PI/2; //0.269*Math.PI*2;//0.665
+    public static final double kClimbingPos = Math.toRadians(15); //0.396*Math.PI*2; //0.396
   }
 
   public static class OperatorConstants

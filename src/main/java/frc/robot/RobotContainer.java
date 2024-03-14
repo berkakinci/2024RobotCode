@@ -12,15 +12,18 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.Arm;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.arm.ampPosCommand;
 import frc.robot.commands.arm.climbingPosCommand;
+import frc.robot.commands.arm.genPosCommand;
 import frc.robot.commands.arm.intakeCommand;
 import frc.robot.commands.arm.outtakeCommand;
 import frc.robot.commands.arm.shooterInitCommand;
@@ -54,19 +57,25 @@ public class RobotContainer
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve/neo"));
 
+  
+
   private final climberSubsystem climber = new climberSubsystem();
   private final intakeSubsystem intake = new intakeSubsystem();
   private final shooterSubsystem shooter = new shooterSubsystem();
   private final armSubsystem arm = new armSubsystem();
 
+  private double desiredPos;
+
+  //private Command genArmPos = new genPosCommand(arm, desiredPos);
   private final Command climberUp = new climberUpCommand(climber);
   private final Command climberDown = new climberDownCommand(climber);
   private final Command intakeNote = new intakeCommand(intake);
   private final Command outtakeNote = new outtakeCommand(intake);
   private final Command unguidedShoot = new unguidedShooterCommand(shooter);
-  //private final Command ampPos = new ampPosCommand(arm);
-  //private final Command climbingPos = new climbingPosCommand(arm);
-  //private final Command startingPos = new startingPosCommand(arm);
+
+  private final Command ampPos = new ampPosCommand(arm);
+  private final Command climbingPos = new climbingPosCommand(arm);
+  private final Command startingPos = new startingPosCommand(arm);
   //add in speaker shoot
 
   static CommandXboxController driverXbox = new CommandXboxController(0);
@@ -139,12 +148,34 @@ public class RobotContainer
     driverXbox.rightBumper().whileTrue(outtakeNote);
     driverXbox.rightTrigger().whileTrue(unguidedShoot);
 
-    //operatorXbox.a().onTrue(climbingPos);
-    //operatorXbox.b().onTrue(ampPos);
-    //operatorXbox.x().onTrue(startingPos);
-    operatorXbox.a().onTrue(new climbingPosCommand(arm));
-    operatorXbox.b().onTrue(new ampPosCommand(arm));
-    operatorXbox.x().onTrue(new startingPosCommand(arm));
+    operatorXbox.a().onTrue(climbingPos);
+    operatorXbox.b().onTrue(ampPos);
+    operatorXbox.x().onTrue(startingPos);
+
+    //operatorXbox.a().onTrue(new climbingPosCommand(arm));
+    //operatorXbox.b().onTrue(new ampPosCommand(arm));
+    //operatorXbox.x().onTrue(new startingPosCommand(arm));
+    //operatorXbox.a().whileTrue(genArmPos);
+
+    /*operatorXbox.a().onTrue(Commands.runOnce(
+      () -> {
+        arm.setGoal(Arm.kClimbingPos); 
+        arm.enable();
+      }, arm));
+
+    operatorXbox.b().onTrue(Commands.runOnce(
+      () -> {
+        arm.setGoal(Arm.kAmpShootPos); 
+        arm.enable();
+      }, arm));
+
+    operatorXbox.x().onTrue(Commands.runOnce(
+      () -> {
+        arm.setGoal(Arm.kStartingPos); 
+        arm.enable();
+      }, arm));
+*/
+    
 
 
   
