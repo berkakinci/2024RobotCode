@@ -19,9 +19,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.arm.ampPosCommand;
+import frc.robot.commands.arm.climbingPosCommand;
 import frc.robot.commands.arm.intakeCommand;
 import frc.robot.commands.arm.outtakeCommand;
 import frc.robot.commands.arm.shooterInitCommand;
+import frc.robot.commands.arm.startingPosCommand;
 import frc.robot.commands.arm.unguidedShooterCommand;
 import frc.robot.commands.climber.climberDownCommand;
 import frc.robot.commands.climber.climberUpCommand;
@@ -29,6 +32,7 @@ import frc.robot.commands.climber.climberZeroCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
+import frc.robot.subsystems.arm.armSubsystem;
 import frc.robot.subsystems.arm.intakeSubsystem;
 import frc.robot.subsystems.arm.shooterSubsystem;
 import frc.robot.subsystems.climber.climberSubsystem;
@@ -53,12 +57,17 @@ public class RobotContainer
   private final climberSubsystem climber = new climberSubsystem();
   private final intakeSubsystem intake = new intakeSubsystem();
   private final shooterSubsystem shooter = new shooterSubsystem();
+  private final armSubsystem arm = new armSubsystem();
 
   private final Command climberUp = new climberUpCommand(climber);
   private final Command climberDown = new climberDownCommand(climber);
   private final Command intakeNote = new intakeCommand(intake);
   private final Command outtakeNote = new outtakeCommand(intake);
   private final Command unguidedShoot = new unguidedShooterCommand(shooter);
+  //private final Command ampPos = new ampPosCommand(arm);
+  //private final Command climbingPos = new climbingPosCommand(arm);
+  //private final Command startingPos = new startingPosCommand(arm);
+  //add in speaker shoot
 
   static CommandXboxController driverXbox = new CommandXboxController(0);
   static CommandXboxController operatorXbox = new CommandXboxController(1);
@@ -129,6 +138,15 @@ public class RobotContainer
     driverXbox.leftBumper().whileTrue(intakeNote);
     driverXbox.rightBumper().whileTrue(outtakeNote);
     driverXbox.rightTrigger().whileTrue(unguidedShoot);
+
+    //operatorXbox.a().onTrue(climbingPos);
+    //operatorXbox.b().onTrue(ampPos);
+    //operatorXbox.x().onTrue(startingPos);
+    operatorXbox.a().onTrue(new climbingPosCommand(arm));
+    operatorXbox.b().onTrue(new ampPosCommand(arm));
+    operatorXbox.x().onTrue(new startingPosCommand(arm));
+
+
   
   }
 

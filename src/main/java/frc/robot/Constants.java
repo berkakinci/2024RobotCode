@@ -66,15 +66,18 @@ public final class Constants
   public static final class Arm {
     public static final int kLeftMotorPort = 26;
     public static final int kRightMotorPort = 25;
-    public static final int kMaxVelocityRadPerSecond = 1;
+    public static final double kMaxVelocityRadPerSecond = 0.1;
     public static final double kGVolts = 0.18;
     public static final double kVVoltSecondPerRad = 11.13;
     public static final double kAVoltSecondSquaredPerRad = 0.01;
     public static final double kSVolts = 0; //try 0.8 if it doesn't work
     public static final double kP = 0;
     public static final double kMaxAccelerationRadPerSecSquared = 1;
-    public static final double kArmOffsetRads = 1;
+    //public static final double kArmOffsetRads = Math.PI/2;
     public static final double kEncoderDistancePerPulse = 2*Math.PI;
+    public static final double kStartingPos = 0.214*Math.PI*2;//0.610
+    public static final double kAmpShootPos = 0.269*Math.PI*2;//0.665
+    public static final double kClimbingPos = 0.396*Math.PI*2; //0.396
   }
 
   public static class OperatorConstants

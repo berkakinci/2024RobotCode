@@ -38,8 +38,6 @@ public class Robot extends TimedRobot {
 
   public UsbCamera frontCamera;
 
-  private DutyCycleEncoder encoder = new DutyCycleEncoder(4);
-
   public Robot() {
     instance = this;
   }
@@ -76,8 +74,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
-    System.out.println("Arm position: " + encoder.getAbsolutePosition());
 
   }
   @Override
