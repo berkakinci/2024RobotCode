@@ -18,9 +18,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.arm.ampPosCommand;
 import frc.robot.commands.arm.climbingPosCommand;
 import frc.robot.commands.arm.intakeCommand;
+import frc.robot.commands.arm.intakePosCommand;
 import frc.robot.commands.arm.outtakeCommand;
 import frc.robot.commands.arm.shooterInitCommand;
-import frc.robot.commands.arm.speakerPosCommand;
 import frc.robot.commands.arm.startingPosCommand;
 import frc.robot.commands.arm.unguidedShooterCommand;
 import frc.robot.commands.climber.climberRightDownCommand;
@@ -71,9 +71,9 @@ public class RobotContainer
   private final Command unguidedShoot = new unguidedShooterCommand(shooter);
 
   private final Command ampPos = new ampPosCommand(arm);
-  private final Command climbingPos = new climbingPosCommand(arm);
+  private final Command climbingAndSpeakerPos = new climbingPosCommand(arm);
   private final Command startingPos = new startingPosCommand(arm);
-  private final Command speakerPos = new speakerPosCommand(arm);
+  private final Command intakePos = new intakePosCommand(arm);
   //add in speaker shoot
 
   static CommandXboxController driverXbox = new CommandXboxController(0);
@@ -152,10 +152,10 @@ public class RobotContainer
     operatorXbox.rightBumper().whileTrue(climberRightDown);
     operatorXbox.rightTrigger().whileTrue(climberRightUp);
 
-    operatorXbox.a().onTrue(climbingPos);
+    operatorXbox.a().onTrue(climbingAndSpeakerPos);
     operatorXbox.y().onTrue(ampPos);
     operatorXbox.x().onTrue(startingPos);
-    //operatorXbox.b().onTrue(speakerPos);
+    operatorXbox.b().onTrue(intakePos);
 
     //operatorXbox.a().onTrue(new climbingPosCommand(arm));
     //operatorXbox.b().onTrue(new ampPosCommand(arm));

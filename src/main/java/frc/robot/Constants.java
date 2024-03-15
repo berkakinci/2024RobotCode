@@ -76,8 +76,8 @@ public final class Constants
     public static final double kEncoderDistancePerRotation = 2*Math.PI;
     public static final double kStartingPos = Math.toRadians(75);//0.214*Math.PI*2;//0.610
     public static final double kAmpShootPos = Math.toRadians(90); //0.269*Math.PI*2;//0.665
-    public static final double kClimbingandFrontSpeakerShootPos = Math.toRadians(15); //0.396*Math.PI*2; //0.396
-    //public static final double kFrontSpeakerShootPos = Math.toRadians(15);
+    public static final double kClimbingandFrontSpeakerShootPos = Math.toRadians(18); //was 15, changed to 18 to compensate for bad offset0.396*Math.PI*2; //0.396
+    public static final double kIntakePos = Math.toRadians(5);
   }
 
   public static class OperatorConstants
