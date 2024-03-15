@@ -7,27 +7,18 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import frc.robot.Constants.Climber;
 
-public class climberSubsystem extends SubsystemBase{
+public class climberRightSubsystem extends SubsystemBase{
 
-    private final CANSparkMax climberMotorLeft = new CANSparkMax(22, MotorType.kBrushless);
     private final CANSparkMax climberMotorRight = new CANSparkMax(21, MotorType.kBrushless);
 
-    private final RelativeEncoder climberMotorLeftRelativeEncoder = climberMotorLeft.getEncoder();
     private final RelativeEncoder climberMotorRightRelativeEncoder = climberMotorRight.getEncoder();
 
-    private final DigitalInput climberLeftLimitSwitch = new DigitalInput(3);
     private final DigitalInput climberRightLimitSwitch = new DigitalInput(2);
 
-    public climberSubsystem() {
+    public climberRightSubsystem() {
 
     }
 
-    public void setLeftClimberDown() {
-         if (!climberLeftLimitSwitch.get()) {
-            climberMotorLeft.set(0.7);
-        }
-    }
-    
     public void setRightClimberDown() {
         if (!climberRightLimitSwitch.get()) {
             climberMotorRight.set(-0.7);
@@ -40,22 +31,11 @@ public class climberSubsystem extends SubsystemBase{
         }
     }
 
-    public void setLeftClimberUp() {
-        if (climberMotorLeftRelativeEncoder.getPosition() > Climber.MAX_HEIGHT_LEFT_ENCODER_VALUE) {
-            climberMotorLeft.set(-0.7);
-        }
-    }
-
-    public void setLeftClimberNeutral() {
-        climberMotorLeft.set(0);
-    }
-
     public void setRightClimberNeutral() {
         climberMotorRight.set(0);
     }
 
-    public void zeroEncoders() {
-        climberMotorLeftRelativeEncoder.setPosition(0);
+    public void zeroRightEncoder() {
         climberMotorRightRelativeEncoder.setPosition(0);
 
     }
@@ -69,26 +49,8 @@ public class climberSubsystem extends SubsystemBase{
         }
     }
 
-    public boolean getLeftDown() {
-        if (climberLeftLimitSwitch.get()){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
     public boolean getRightUp() {
         if (climberMotorRightRelativeEncoder.getPosition() > Climber.MAX_HEIGHT_RIGHT_ENCODER_VALUE) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    public boolean getLeftUp() {
-        if (climberMotorLeftRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_LEFT_ENCODER_VALUE) {
             return true;
         }
         else {

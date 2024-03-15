@@ -25,16 +25,18 @@ import frc.robot.commands.arm.startingPosCommand;
 import frc.robot.commands.arm.unguidedShooterCommand;
 import frc.robot.commands.climber.climberRightDownCommand;
 import frc.robot.commands.climber.climberRightUpCommand;
+import frc.robot.commands.climber.climberRightZeroCommand;
 import frc.robot.commands.climber.climberLeftDownCommand;
 import frc.robot.commands.climber.climberLeftUpCommand;
-import frc.robot.commands.climber.climberZeroCommand;
+import frc.robot.commands.climber.climberLeftZeroCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.arm.armSubsystem;
 import frc.robot.subsystems.arm.intakeSubsystem;
 import frc.robot.subsystems.arm.shooterSubsystem;
-import frc.robot.subsystems.climber.climberSubsystem;
+import frc.robot.subsystems.climber.climberLeftSubsystem;
+import frc.robot.subsystems.climber.climberRightSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 import java.io.File;
@@ -55,16 +57,17 @@ public class RobotContainer
 
   
 
-  private final climberSubsystem climber = new climberSubsystem();
+  private final climberRightSubsystem rightClimber = new climberRightSubsystem();
+  private final climberLeftSubsystem leftClimber = new climberLeftSubsystem();
   private final intakeSubsystem intake = new intakeSubsystem();
   private final shooterSubsystem shooter = new shooterSubsystem();
   private final armSubsystem arm = new armSubsystem();
 
   //private Command genArmPos = new genPosCommand(arm, desiredPos);
-  private final Command climberLeftUp = new climberLeftUpCommand(climber);
-  private final Command climberRightDown = new climberRightDownCommand(climber);
-  private final Command climberLeftDown = new climberLeftDownCommand(climber);
-  private final Command climberRightUp = new climberRightUpCommand(climber);
+  private final Command climberLeftUp = new climberLeftUpCommand(leftClimber);
+  private final Command climberRightDown = new climberRightDownCommand(rightClimber);
+  private final Command climberLeftDown = new climberLeftDownCommand(leftClimber);
+  private final Command climberRightUp = new climberRightUpCommand(rightClimber);
   
   private final Command intakeNote = new intakeCommand(intake);
   private final Command outtakeNote = new outtakeCommand(intake);
@@ -195,8 +198,12 @@ public class RobotContainer
     return autoChooser.getSelected();
   }
 
-  public Command climberZeroCommand(){
-    return new climberZeroCommand(climber);
+  public Command climberLeftZeroCommand(){
+    return new climberLeftZeroCommand(leftClimber);
+  }
+
+  public Command climberRightZeroCommand() {
+    return new climberRightZeroCommand(rightClimber);
   }
 
   public Command shooterInitCommand() {

@@ -63,7 +63,10 @@ public class Robot extends TimedRobot {
 
     PortForwarder.add(5800, "limelight.local", 5800);
     PortForwarder.add(1182, "limelight.local", 1182);
-    m_robotContainer.climberZeroCommand().schedule();
+    
+    m_robotContainer.climberLeftZeroCommand().schedule();
+
+    m_robotContainer.climberRightZeroCommand().schedule();
     
     m_robotContainer.shooterInitCommand().schedule();
 
