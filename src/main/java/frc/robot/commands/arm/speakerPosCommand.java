@@ -18,6 +18,13 @@ public class speakerPosCommand extends Command {
         if (!m_ArmSubsystem.isEnabled()) {
             m_ArmSubsystem.enable();
         }
+
+        
+    }
+
+    @Override
+    public void execute() {
+        System.out.println("position error: " + m_ArmSubsystem.showPositionError());
     }
 
 }

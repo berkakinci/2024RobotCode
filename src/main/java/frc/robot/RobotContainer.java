@@ -23,8 +23,10 @@ import frc.robot.commands.arm.shooterInitCommand;
 import frc.robot.commands.arm.speakerPosCommand;
 import frc.robot.commands.arm.startingPosCommand;
 import frc.robot.commands.arm.unguidedShooterCommand;
-import frc.robot.commands.climber.climberDownCommand;
-import frc.robot.commands.climber.climberUpCommand;
+import frc.robot.commands.climber.climberRightDownCommand;
+import frc.robot.commands.climber.climberRightUpCommand;
+import frc.robot.commands.climber.climberLeftDownCommand;
+import frc.robot.commands.climber.climberLeftUpCommand;
 import frc.robot.commands.climber.climberZeroCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
@@ -59,8 +61,11 @@ public class RobotContainer
   private final armSubsystem arm = new armSubsystem();
 
   //private Command genArmPos = new genPosCommand(arm, desiredPos);
-  private final Command climberUp = new climberUpCommand(climber);
-  private final Command climberDown = new climberDownCommand(climber);
+  private final Command climberLeftUp = new climberLeftUpCommand(climber);
+  private final Command climberRightDown = new climberRightDownCommand(climber);
+  private final Command climberLeftDown = new climberLeftDownCommand(climber);
+  private final Command climberRightUp = new climberRightUpCommand(climber);
+  
   private final Command intakeNote = new intakeCommand(intake);
   private final Command outtakeNote = new outtakeCommand(intake);
   private final Command unguidedShoot = new unguidedShooterCommand(shooter);
@@ -135,11 +140,17 @@ public class RobotContainer
     driverXbox.a().onTrue((new InstantCommand(drivebase::zeroGyro)));
     driverXbox.y().onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     driverXbox.x().whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
-    driverXbox.povUp().whileTrue(climberUp);
-    driverXbox.povDown().whileTrue(climberDown);
+    //driverXbox.povUp().whileTrue(climberUp);
+    //driverXbox.povDown().whileTrue(climberDown);
     driverXbox.leftBumper().whileTrue(intakeNote);
     driverXbox.rightBumper().whileTrue(outtakeNote);
     driverXbox.rightTrigger().whileTrue(unguidedShoot);
+
+    operatorXbox.leftBumper().whileTrue(climberLeftDown);
+    operatorXbox.leftTrigger().whileTrue(climberLeftUp);
+
+    operatorXbox.rightBumper().whileTrue(climberRightDown);
+    operatorXbox.rightTrigger().whileTrue(climberRightUp);
 
     operatorXbox.a().onTrue(climbingPos);
     operatorXbox.y().onTrue(ampPos);

@@ -3,10 +3,10 @@ package frc.robot.commands.climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.climber.climberSubsystem;
 
-public class climberDownCommand extends Command {
+public class climberRightDownCommand extends Command {
 
     private final climberSubsystem m_ClimberSubsystem;
-    public climberDownCommand(climberSubsystem subsystem) {
+    public climberRightDownCommand(climberSubsystem subsystem) {
         m_ClimberSubsystem = subsystem;
         addRequirements(m_ClimberSubsystem);
     }
@@ -18,16 +18,16 @@ public class climberDownCommand extends Command {
 
     @Override
     public void execute() {
-            m_ClimberSubsystem.setClimberDown();
+            m_ClimberSubsystem.setRightClimberDown();
     }
 
     @Override
     public void end (boolean interrupted) {
-        m_ClimberSubsystem.setClimberNeutral();
+        m_ClimberSubsystem.setRightClimberNeutral();
     }
 
     @Override
     public boolean isFinished(){
-    return m_ClimberSubsystem.getDown();
+    return m_ClimberSubsystem.getRightDown();
 }
 }

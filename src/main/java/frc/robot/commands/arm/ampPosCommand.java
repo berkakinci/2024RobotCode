@@ -20,5 +20,10 @@ public class ampPosCommand extends Command {
         }
         
     }
+
+    @Override
+    public void execute() {
+        System.out.println("position error: " + m_ArmSubsystem.showPositionError());
+    }
     
 }

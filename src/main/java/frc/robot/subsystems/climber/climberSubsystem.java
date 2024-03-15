@@ -22,22 +22,35 @@ public class climberSubsystem extends SubsystemBase{
 
     }
 
-    public void setClimberDown() {
-         if (!climberLeftLimitSwitch.get() && !climberRightLimitSwitch.get()) {
+    public void setLeftClimberDown() {
+         if (!climberLeftLimitSwitch.get()) {
             climberMotorLeft.set(0.7);
+        }
+    }
+    
+    public void setRightClimberDown() {
+        if (!climberRightLimitSwitch.get()) {
             climberMotorRight.set(-0.7);
         }
     }
 
-    public void setClimberUp() {
-        if (climberMotorLeftRelativeEncoder.getPosition() > Climber.MAX_HEIGHT_LEFT_ENCODER_VALUE && climberMotorRightRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_RIGHT_ENCODER_VALUE) {
-            climberMotorLeft.set(-0.7);
+    public void setRightClimberUp() {
+        if (climberMotorRightRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_RIGHT_ENCODER_VALUE) {
             climberMotorRight.set(0.7);
         }
     }
 
-    public void setClimberNeutral() {
+    public void setLeftClimberUp() {
+        if (climberMotorLeftRelativeEncoder.getPosition() > Climber.MAX_HEIGHT_LEFT_ENCODER_VALUE) {
+            climberMotorLeft.set(-0.7);
+        }
+    }
+
+    public void setLeftClimberNeutral() {
         climberMotorLeft.set(0);
+    }
+
+    public void setRightClimberNeutral() {
         climberMotorRight.set(0);
     }
 
@@ -47,8 +60,8 @@ public class climberSubsystem extends SubsystemBase{
 
     }
 
-    public boolean getDown() {
-        if (climberLeftLimitSwitch.get() || climberRightLimitSwitch.get()){
+    public boolean getRightDown() {
+        if (climberRightLimitSwitch.get()){
             return true;
         }
         else {
@@ -56,8 +69,26 @@ public class climberSubsystem extends SubsystemBase{
         }
     }
 
-    public boolean getUp() {
-        if (climberMotorLeftRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_LEFT_ENCODER_VALUE && climberMotorRightRelativeEncoder.getPosition() > Climber.MAX_HEIGHT_RIGHT_ENCODER_VALUE) {
+    public boolean getLeftDown() {
+        if (climberLeftLimitSwitch.get()){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean getRightUp() {
+        if (climberMotorRightRelativeEncoder.getPosition() > Climber.MAX_HEIGHT_RIGHT_ENCODER_VALUE) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean getLeftUp() {
+        if (climberMotorLeftRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_LEFT_ENCODER_VALUE) {
             return true;
         }
         else {
