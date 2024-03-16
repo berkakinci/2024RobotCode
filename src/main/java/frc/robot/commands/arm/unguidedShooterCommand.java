@@ -1,13 +1,16 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.arm.shooterSubsystem;
 
 public class unguidedShooterCommand extends Command {
 
     private final shooterSubsystem m_ShooterSubsystem;
-    public unguidedShooterCommand(shooterSubsystem subsystem) {
+    //private final CommandXboxController operatorXbox;
+    public unguidedShooterCommand(shooterSubsystem subsystem/*, CommandXboxController operator*/) {
         m_ShooterSubsystem = subsystem;
+        //operatorXbox = operator;
         addRequirements(m_ShooterSubsystem);
     }
 
@@ -18,7 +21,9 @@ public class unguidedShooterCommand extends Command {
 
     @Override
     public void execute() {
-        
+        //if (m_ShooterSubsystem.isSpunUp()) {
+            //operatorXbox.();
+       // }
     }
 
     @Override

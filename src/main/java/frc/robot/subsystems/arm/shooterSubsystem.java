@@ -67,6 +67,15 @@ public class shooterSubsystem extends SubsystemBase {
         m_loop.reset(VecBuilder.fill(Units.rotationsPerMinuteToRadiansPerSecond(shooterEncoder.getVelocity())));
     }
 
+    public boolean isSpunUp() {
+        if (shooterEncoder.getVelocity() > 5500) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public shooterSubsystem () {
 
     }

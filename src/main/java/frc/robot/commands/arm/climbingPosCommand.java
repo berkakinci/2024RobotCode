@@ -24,5 +24,10 @@ public class climbingPosCommand extends Command {
     public void execute() {
         System.out.println("position error: " + m_ArmSubsystem.showPositionError());
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
     
 }
