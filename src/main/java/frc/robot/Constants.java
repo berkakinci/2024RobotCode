@@ -109,8 +109,8 @@ public final class Constants
     }
 
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-      new PIDConstants(0.7, 0, 0), // Translation constants 
-      new PIDConstants(0.4, 0, 0.01), // Rotation constants 
+      new PIDConstants(0.0020645, 0, 0), // Translation constants 
+      new PIDConstants(0.03, 0, 0), // Rotation constants 
       Auton.MAX_SPEED, 
       ROBORADIUS, // Drive base radius (distance from center to furthest module) 
       new ReplanningConfig(true, true)
