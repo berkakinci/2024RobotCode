@@ -21,13 +21,13 @@ public class climberRightSubsystem extends SubsystemBase{
 
     public void setRightClimberDown() {
         if (!climberRightLimitSwitch.get()) {
-            climberMotorRight.set(-0.7);
+            climberMotorRight.set(-1);
         }
     }
 
     public void setRightClimberUp() {
         if (climberMotorRightRelativeEncoder.getPosition() < Climber.MAX_HEIGHT_RIGHT_ENCODER_VALUE) {
-            climberMotorRight.set(0.7);
+            climberMotorRight.set(1);
         }
     }
 

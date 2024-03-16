@@ -161,7 +161,8 @@ public class RobotContainer
     //driverXbox.povDown().whileTrue(climberDown);
     driverXbox.leftBumper().whileTrue(intakeNote);
     driverXbox.rightBumper().whileTrue(outtakeNote);
-    driverXbox.rightTrigger().whileTrue(unguidedShoot);
+
+    operatorXbox.povUp().whileTrue(unguidedShoot);
 
     operatorXbox.leftBumper().whileTrue(climberLeftDown);
     operatorXbox.leftTrigger().whileTrue(climberLeftUp);
