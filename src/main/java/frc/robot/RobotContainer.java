@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.arm.ampPosCommand;
+import frc.robot.commands.arm.autoIntakeCommand;
 import frc.robot.commands.arm.climbingPosCommand;
 import frc.robot.commands.arm.intakeCommand;
 import frc.robot.commands.arm.intakePosCommand;
@@ -42,6 +43,7 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -63,6 +65,8 @@ public class RobotContainer
   private final shooterSubsystem shooter = new shooterSubsystem();
   private final armSubsystem arm = new armSubsystem();
 
+  //NamedCommands.registerCommand("speaker shoot", new climbingPosCommand(arm));
+
   //private Command genArmPos = new genPosCommand(arm, desiredPos);
   private final Command climberLeftUp = new climberLeftUpCommand(leftClimber);
   private final Command climberRightDown = new climberRightDownCommand(rightClimber);
@@ -70,6 +74,7 @@ public class RobotContainer
   private final Command climberRightUp = new climberRightUpCommand(rightClimber);
   
   private final Command intakeNote = new intakeCommand(intake);
+  private final Command autoIntakeNote = new autoIntakeCommand(intake);
   private final Command outtakeNote = new outtakeCommand(intake);
   private final Command unguidedShoot = new unguidedShooterCommand(shooter);
 
@@ -90,6 +95,15 @@ public class RobotContainer
 
   public RobotContainer()
   {
+
+    NamedCommands.registerCommand("climbingAndSpeakerPos", climbingAndSpeakerPos);
+    NamedCommands.registerCommand("startingPos", startingPos);
+    NamedCommands.registerCommand("intakePos", intakePos);
+    NamedCommands.registerCommand("ampPos", ampPos);
+    NamedCommands.registerCommand("intakeNote", intakeNote);
+    NamedCommands.registerCommand("autoIntakeNote" , autoIntakeNote);
+    NamedCommands.registerCommand("unguidedShoot", unguidedShoot);
+    
     // Configure the trigger bindings
     configureBindings();
 
