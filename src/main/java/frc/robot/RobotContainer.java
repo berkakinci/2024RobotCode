@@ -136,7 +136,7 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> -driverXbox.getRightX(), () -> true);
 
-    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedFieldAbsoluteDrive);
+    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedFieldAbsoluteDrive : closedFieldAbsoluteDrive);
 
     autoChooser = AutoBuilder.buildAutoChooser(); //default auto will be "Commands.non()"
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -162,13 +162,15 @@ public class RobotContainer
     driverXbox.leftBumper().whileTrue(intakeNote);
     driverXbox.rightBumper().whileTrue(outtakeNote);
 
+    //driverXbox.povUp().onTrue((new InstantCommand(drivebase::)))
+
     operatorXbox.povUp().whileTrue(unguidedShoot);
 
     operatorXbox.leftBumper().whileTrue(climberLeftDown);
     operatorXbox.leftTrigger().whileTrue(climberLeftUp);
 
-    operatorXbox.rightBumper().whileTrue(climberRightDown);
-    operatorXbox.rightTrigger().whileTrue(climberRightUp);
+    //operatorXbox.rightBumper().whileTrue(climberRightDown);
+    //operatorXbox.rightTrigger().whileTrue(climberRightUp);
 
     operatorXbox.a().onTrue(climbingAndSpeakerPos);
     operatorXbox.y().onTrue(ampPos);
