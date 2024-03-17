@@ -169,8 +169,8 @@ public class RobotContainer
     operatorXbox.leftBumper().whileTrue(climberLeftDown);
     operatorXbox.leftTrigger().whileTrue(climberLeftUp);
 
-    //operatorXbox.rightBumper().whileTrue(climberRightDown);
-    //operatorXbox.rightTrigger().whileTrue(climberRightUp);
+    operatorXbox.rightBumper().whileTrue(climberRightDown);
+    operatorXbox.rightTrigger().whileTrue(climberRightUp);
 
     operatorXbox.a().onTrue(climbingAndSpeakerPos);
     operatorXbox.y().onTrue(ampPos);
