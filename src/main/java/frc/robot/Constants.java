@@ -86,6 +86,9 @@ public final class Constants
     // Joystick Deadband
     public static final double LEFT_X_DEADBAND = 0.01;
     public static final double LEFT_Y_DEADBAND = 0.01;
+
+    public static final double ROTATION_DEADBAND = 0.1;
+     
   }
 
     public static class Vision {
