@@ -120,9 +120,9 @@ public class RobotContainer
       () -> -driverXbox.getLeftY());
 
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
-      () -> -MathUtil.applyDeadband(-driverXbox.getLeftY(),
+      () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
         OperatorConstants.LEFT_Y_DEADBAND),
-      () -> -MathUtil.applyDeadband(-driverXbox.getLeftX(),
+      () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
         OperatorConstants.LEFT_X_DEADBAND),
       () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
         OperatorConstants.ROTATION_DEADBAND),
@@ -136,7 +136,7 @@ public class RobotContainer
         OperatorConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband(driverXbox.getRightX(),
         OperatorConstants.LEFT_X_DEADBAND),
-      () -> MathUtil.applyDeadband(driverXbox.getLeftX()*360, OperatorConstants.ROTATION_DEADBAND));
+      () -> driverXbox.getLeftX()*360);
 
     TeleopDrive simClosedFieldRel = new TeleopDrive(drivebase,
       () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
@@ -150,7 +150,7 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> -driverXbox.getRightX(), () -> true);
 
-    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDriveAdv : closedAbsoluteDrive);
+    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedFieldAbsoluteDrive);
 
     autoChooser = AutoBuilder.buildAutoChooser(); //default auto will be "Commands.non()"
     SmartDashboard.putData("Auto Chooser", autoChooser);
