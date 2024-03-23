@@ -31,6 +31,7 @@ import frc.robot.commands.climber.climberLeftDownCommand;
 import frc.robot.commands.climber.climberLeftUpCommand;
 import frc.robot.commands.climber.climberLeftZeroCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
+import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.arm.armSubsystem;
@@ -118,14 +119,25 @@ public class RobotContainer
       () -> -driverXbox.getLeftX(),
       () -> -driverXbox.getLeftY());
 
-    /*AbsoluteFieldDrive closedFieldAbsoluteDrive = new AbsoluteFieldDrive(drivebase,
+    AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
+      () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
+        OperatorConstants.LEFT_Y_DEADBAND),
+      () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
+        OperatorConstants.LEFT_X_DEADBAND),
+      () -> -MathUtil.applyDeadband(driverXbox.getRightX() * 360,
+        OperatorConstants.ROTATION_DEADBAND),
+      driverXbox.getHID()::getYButtonPressed,
+      driverXbox.getHID()::getAButtonPressed,
+      driverXbox.getHID()::getXButtonPressed,
+      driverXbox.getHID()::getBButtonPressed);
+      
+    AbsoluteFieldDrive closedFieldAbsoluteDrive = new AbsoluteFieldDrive(drivebase,
       () -> MathUtil.applyDeadband(driverXbox.getRightY(),
         OperatorConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband(driverXbox.getRightX(),
         OperatorConstants.LEFT_X_DEADBAND),
-      () -> driverXbox.getLeftX()*360,
-      () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.ROTATION_DEADBAND));
-*/
+      () -> MathUtil.applyDeadband(driverXbox.getLeftX()*360, OperatorConstants.ROTATION_DEADBAND));
+
     TeleopDrive simClosedFieldRel = new TeleopDrive(drivebase,
       () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
         OperatorConstants.LEFT_Y_DEADBAND),
@@ -138,7 +150,7 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> -driverXbox.getRightX(), () -> true);
 
-    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedAbsoluteDrive);
+    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDriveAdv : closedAbsoluteDrive);
 
     autoChooser = AutoBuilder.buildAutoChooser(); //default auto will be "Commands.non()"
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -156,9 +168,9 @@ public class RobotContainer
   {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    driverXbox.a().onTrue((new InstantCommand(drivebase::zeroGyro)));
-    driverXbox.y().onTrue(new InstantCommand(drivebase::addFakeVisionReading));
-    driverXbox.x().whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
+    driverXbox.start().onTrue((new InstantCommand(drivebase::zeroGyro)));
+    //driverXbox.y().onTrue(new InstantCommand(drivebase::addFakeVisionReading));
+    //driverXbox.x().whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
     //driverXbox.povUp().whileTrue(climberUp);
     //driverXbox.povDown().whileTrue(climberDown);
     driverXbox.leftBumper().whileTrue(intakeNote);
@@ -171,8 +183,8 @@ public class RobotContainer
     operatorXbox.leftBumper().whileTrue(climberLeftDown);
     operatorXbox.leftTrigger().whileTrue(climberLeftUp);
 
-    operatorXbox.rightBumper().whileTrue(climberRightDown);
-    operatorXbox.rightTrigger().whileTrue(climberRightUp);
+    operatorXbox.leftBumper().whileTrue(climberRightDown);
+    operatorXbox.leftTrigger().whileTrue(climberRightUp);
 
     operatorXbox.a().onTrue(climbingAndSpeakerPos);
     operatorXbox.y().onTrue(ampPos);

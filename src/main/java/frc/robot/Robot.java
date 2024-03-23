@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
 
     frontCamera = CameraServer.startAutomaticCapture(0);
 
-    PortForwarder.add(5800, "limelight.local", 5800);
+    PortForwarder.add(5800, "photonvision.local", 5800);
     PortForwarder.add(1182, "limelight.local", 1182);
     
     m_robotContainer.climberLeftZeroCommand().schedule();
