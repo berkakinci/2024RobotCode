@@ -56,8 +56,8 @@ public class armSubsystem extends ProfiledPIDSubsystem {
     // Add the feedforward to the PID output to get the motor output
     leftMotor.setVoltage(-output + feedforward);// + feedforward);
     rightMotor.setVoltage(-output + feedforward);// + feedforward);
-    System.out.println("Absolute position encoder measurement: " + getMeasurement());
-    System.out.println("Voltage: " + output);
+    //System.out.println("Absolute position encoder measurement: " + getMeasurement());
+    //System.out.println("Voltage: " + output);
     
   }
 
