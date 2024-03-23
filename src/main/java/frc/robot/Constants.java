@@ -88,6 +88,7 @@ public final class Constants
     public static final double LEFT_Y_DEADBAND = 0.01;
 
     public static final double ROTATION_DEADBAND = 0.1;
+    public static final double HEADING_DEADBAND = 0.1;
 
     public static final double TURN_CONSTANT = 15;
      

@@ -116,8 +116,10 @@ public class RobotContainer
         OperatorConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband((-driverXbox.getRightX()),
         OperatorConstants.LEFT_X_DEADBAND),
-      () -> -driverXbox.getLeftX(),
-      () -> -driverXbox.getLeftY());
+      () -> MathUtil.applyDeadband((-driverXbox.getLeftX()),
+        OperatorConstants.HEADING_DEADBAND),
+      () -> MathUtil.applyDeadband((-driverXbox.getLeftY()),
+        OperatorConstants.HEADING_DEADBAND));
 
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
       () -> -MathUtil.applyDeadband(-driverXbox.getLeftY(),
@@ -150,7 +152,7 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> -driverXbox.getRightX(), () -> true);
 
-    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDriveAdv : closedAbsoluteDrive);
+    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDriveAdv : closedFieldAbsoluteDrive);
 
     autoChooser = AutoBuilder.buildAutoChooser(); //default auto will be "Commands.non()"
     SmartDashboard.putData("Auto Chooser", autoChooser);
