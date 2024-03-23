@@ -8,15 +8,17 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
+//import edu.wpi.first.apriltag.AprilTagFieldLayout;
+//import edu.wpi.first.apriltag.AprilTagFields;
+//import edu.wpi.first.math.Matrix;
+//import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
+//import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
+//import edu.wpi.first.math.numbers.N1;
+//import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
 import swervelib.parser.PIDFConfig;
@@ -32,10 +34,10 @@ import swervelib.parser.PIDFConfig;
 public final class Constants
 {
 
-  public static final double ROBOT_MASS = (25) * 0.453592; // 32lbs * kg per pound
-  public static final Matter CHASSIS    = new Matter(new Translation3d(Units.inchesToMeters(28), Units.inchesToMeters(28), Units.inchesToMeters(8)), ROBOT_MASS);
+  public static final double ROBOT_MASS = (97) * 0.453592; // 32lbs * kg per pound
+  public static final Matter CHASSIS    = new Matter(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(2)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double ROBORADIUS = 0.5; //distance from center to farthest point on a module
+  public static final double ROBORADIUS = 0.51; //distance from center to farthest point on a module
 
   public static final class Auton
   {
@@ -55,33 +57,65 @@ public final class Constants
     public static final double WHEEL_LOCK_TIME = 10; // seconds
   }
 
+  public static final class Climber {
+    public static final double MAX_HEIGHT_LEFT_ENCODER_VALUE = -600;
+    public static final double MAX_HEIGHT_RIGHT_ENCODER_VALUE = 600; //TODO: replace these dummy values with real ones
+  }
+
+  public static final class Arm {
+    public static final int kLeftMotorPort = 26;
+    public static final int kRightMotorPort = 25;
+    public static final double kMaxVelocityRadPerSecond = 1;
+    public static final double kGVolts = 0.18;
+    public static final double kVVoltSecondPerRad = 11.13;
+    public static final double kAVoltSecondSquaredPerRad = 0.01;
+    public static final double kSVolts = 0.8; //try 0.8 if it doesn't work
+    public static final double kP = 45; //tiny oscillation at 50
+    public static final double kMaxAccelerationRadPerSecSquared = 1;
+    //public static final double kArmOffsetRads = Math.PI/2;
+    public static final double kEncoderDistancePerRotation = 2*Math.PI;
+    public static final double kStartingPos = Math.toRadians(75);//0.214*Math.PI*2;//0.610
+    public static final double kAmpShootPos = Math.toRadians(90); //0.269*Math.PI*2;//0.665
+    public static final double kClimbingandFrontSpeakerShootPos = Math.toRadians(18); //was 15, changed to 18 to compensate for bad offset0.396*Math.PI*2; //0.396
+    public static final double kIntakePos = Math.toRadians(5);
+  }
+
   public static class OperatorConstants
   {
 
     // Joystick Deadband
     public static final double LEFT_X_DEADBAND = 0.01;
     public static final double LEFT_Y_DEADBAND = 0.01;
+
+    public static final double ROTATION_DEADBAND = 0.1;
+
+    public static final double TURN_CONSTANT = 15;
+     
   }
 
-  public static class Vision {
-        public static final String kCameraName = "photonvision";
-        // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-        public static final Transform3d kRobotToCam =
-                new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
+    public static class Vision {
+        public static final String FRONT_CAMERA_NAME = "limelight";
 
-        // The layout of the AprilTags on the field
-        public static final AprilTagFieldLayout kTagLayout =
-                AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+        // TODO: measure these offsets
+        public static final Pose3d FRONT_CAMERA_POSE = new Pose3d(-0.2774, 0, 0.2271, new Rotation3d(0,Math.toRadians(147.972),0)); //old pitch 0.559 rad
 
-        // The standard deviations of our vision estimated poses, which affect correction rate
-        // (Fake values. Experiment and determine estimation noise on an actual robot.)
-        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+        // TODO: find these values
+        public static final double MAX_VISION_DELAY_SECS = 0.08;
+        public static final double MAX_ACCEPTED_ROT_SPEED_RAD_PER_SEC = 1.0;
+        public static final double MAX_ACCEPTED_LINEAR_SPEED_MPS = 4.0;
+        public static final double MIN_ACCEPTED_NUM_TAGS = 1;
+        public static final double MAX_ACCEPTED_AVG_TAG_DIST_METERS = 8.0;
+
+        public static final int SIM_RES_WIDTH = 1280;
+        public static final int SIM_RES_HEIGHT = 960;
+        public static final Rotation2d SIM_DIAGONAL_FOV = Rotation2d.fromDegrees(100);
+        public static final double SIM_FPS = 14.5;
+        public static final double SIM_AVG_LATENCY_MS = 67.0;
     }
 
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-      new PIDConstants(0.7, 0, 0), // Translation constants 
-      new PIDConstants(0.4, 0, 0.01), // Rotation constants 
+      new PIDConstants(0.0020645, 0, 0), // Translation constants 
+      new PIDConstants(0.03, 0, 0), // Rotation constants 
       Auton.MAX_SPEED, 
       ROBORADIUS, // Drive base radius (distance from center to furthest module) 
       new ReplanningConfig(true, true)

@@ -7,23 +7,32 @@ package frc.robot.subsystems.swervedrive;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
-import frc.robot.subsystems.LimelightIO.LimelightIOInputsAutoLogged;
+import frc.robot.Constants;
+import frc.robot.utils.vision.TimestampedVisionPose;
+import frc.robot.utils.vision.VisionPoseAcceptor;
+import frc.robot.subsystems.vision.AprilTagVision;
 
 import java.io.File;
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -39,6 +48,8 @@ public class SwerveSubsystem extends SubsystemBase {
    * Swerve drive object.
    */
   private final SwerveDrive swerveDrive;
+
+  public AprilTagVision aprilTagVision;
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
@@ -49,6 +60,15 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   //private SwerveAutoBuilder autoBuilder  = null;
 
+  private static SwerveDrivePoseEstimator poseEstimator;
+
+  //private SwerveModule[] swerveModules;
+
+  private Rotation2d rawGyroRotation = new Rotation2d();
+  private Consumer<TimestampedVisionPose> visionPoseConsumer = SwerveSubsystem::updatePose;
+  
+  StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault().getStructTopic("Robot Pose Export", Pose2d.struct).publish();
+  
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
    *
@@ -69,8 +89,12 @@ public class SwerveSubsystem extends SubsystemBase {
     System.out.println("\t\"drive\": " + driveConversionFactor);
     System.out.println("}");
 
+    
+    
+    //Consumer<TimestampedVisionPose> poseConsumer;
+
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
     try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed);
       // Alternative method if you don't want to supply the conversion factor via JSON files.
@@ -80,9 +104,18 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
   
+    poseEstimator = new SwerveDrivePoseEstimator(getKinematics(), getHeading(), getModulePositions(), new Pose2d(), VecBuilder.fill(0.1, 0.1, 0.1), VecBuilder.fill(0.5, 0.5, 0.5));
+
+    //swerveModules = swerveDrive.getModules();
+
+    aprilTagVision = AprilTagVision.createAprilTagVision(
+    visionPoseConsumer,
+    new VisionPoseAcceptor(swerveDrive::getFieldVelocity)
+  );
+
     AutoBuilder.configureHolonomic(
     this::getPose,
-    this::resetOdometry,
+    this::setPose,
     this::getRobotVelocity,
     this::drive,
     Constants.pathFollowerConfig,
@@ -158,7 +191,14 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+
+    rawGyroRotation = getHeading();
+
+    poseEstimator.update(rawGyroRotation, getModulePositions());
+
+    addTimestampedVisionPose(AprilTagVision.latestPose);
+
+    publisher.set(poseEstimator.getEstimatedPosition());
     
   }
 
@@ -192,7 +232,14 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return The robot's pose
    */
   public Pose2d getPose() {
-    return swerveDrive.getPose();
+    return poseEstimator.getEstimatedPosition();
+  }
+
+  /**
+   * Resets the current odometry pose
+   **/
+  public void setPose (Pose2d pose) {
+    poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }
 
   /**
@@ -204,6 +251,8 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.setChassisSpeeds(chassisSpeeds);
   }
 
+
+  
   /**
    * Post the trajectory to the field.
    *
@@ -309,6 +358,16 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   /**
+   * Gets the current module positions (azimuth and wheel position (meters)).
+   *
+   * @return A list of SwerveModulePositions containg the current module positions
+   */
+  public SwerveModulePosition[] getModulePositions()
+  {
+    return swerveDrive.getModulePositions();
+  }
+
+  /**
    * Lock the swerve drive to prevent it from moving.
    */
   public void lock() {
@@ -330,6 +389,15 @@ public class SwerveSubsystem extends SubsystemBase {
   public void addFakeVisionReading() {
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
+
+  public static void updatePose(TimestampedVisionPose visionpose) {
+    poseEstimator.addVisionMeasurement(visionpose.poseMeters(), visionpose.timestampSecs());
+  }
+
+ public void addTimestampedVisionPose(Optional<TimestampedVisionPose> visionPose) {
+    visionPose.ifPresent(this.visionPoseConsumer);
+    
+}
 
   /**
    * Factory to fetch the PathPlanner command to follow the defined path.

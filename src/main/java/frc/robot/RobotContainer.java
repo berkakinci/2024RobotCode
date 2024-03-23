@@ -7,23 +7,44 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.arm.ampPosCommand;
+import frc.robot.commands.arm.autoIntakeCommand;
+import frc.robot.commands.arm.climbingPosCommand;
+import frc.robot.commands.arm.intakeCommand;
+import frc.robot.commands.arm.intakePosCommand;
+import frc.robot.commands.arm.outtakeCommand;
+import frc.robot.commands.arm.shooterInitCommand;
+import frc.robot.commands.arm.startingPosCommand;
+import frc.robot.commands.arm.unguidedShooterCommand;
+import frc.robot.commands.climber.climberRightDownCommand;
+import frc.robot.commands.climber.climberRightUpCommand;
+import frc.robot.commands.climber.climberRightZeroCommand;
+import frc.robot.commands.climber.climberLeftDownCommand;
+import frc.robot.commands.climber.climberLeftUpCommand;
+import frc.robot.commands.climber.climberLeftZeroCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
+import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
+import frc.robot.subsystems.arm.armSubsystem;
+import frc.robot.subsystems.arm.intakeSubsystem;
+import frc.robot.subsystems.arm.shooterSubsystem;
+import frc.robot.subsystems.climber.climberLeftSubsystem;
+import frc.robot.subsystems.climber.climberRightSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+
 import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -36,12 +57,36 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve/neo"));
-  // CommandJoystick rotationController = new CommandJoystick(1);
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  //static CommandJoystick driverController = new CommandJoystick(0);
 
-  // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT);
-  static XboxController driverXbox = new XboxController(0);
+  
+
+  private final climberRightSubsystem rightClimber = new climberRightSubsystem();
+  private final climberLeftSubsystem leftClimber = new climberLeftSubsystem();
+  private final intakeSubsystem intake = new intakeSubsystem();
+  private final shooterSubsystem shooter = new shooterSubsystem();
+  private final armSubsystem arm = new armSubsystem();
+
+  //NamedCommands.registerCommand("speaker shoot", new climbingPosCommand(arm));
+
+  //private Command genArmPos = new genPosCommand(arm, desiredPos);
+  private final Command climberLeftUp = new climberLeftUpCommand(leftClimber);
+  private final Command climberRightDown = new climberRightDownCommand(rightClimber);
+  private final Command climberLeftDown = new climberLeftDownCommand(leftClimber);
+  private final Command climberRightUp = new climberRightUpCommand(rightClimber);
+  
+  private final Command intakeNote = new intakeCommand(intake);
+  private final Command autoIntakeNote = new autoIntakeCommand(intake);
+  private final Command outtakeNote = new outtakeCommand(intake);
+  private final Command unguidedShoot = new unguidedShooterCommand(shooter);
+
+  private final Command ampPos = new ampPosCommand(arm);
+  private final Command climbingAndSpeakerPos = new climbingPosCommand(arm);
+  private final Command startingPos = new startingPosCommand(arm);
+  private final Command intakePos = new intakePosCommand(arm);
+  //add in speaker shoot
+
+  static CommandXboxController driverXbox = new CommandXboxController(0);
+  static CommandXboxController operatorXbox = new CommandXboxController(1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -51,6 +96,15 @@ public class RobotContainer
 
   public RobotContainer()
   {
+
+    NamedCommands.registerCommand("climbingAndSpeakerPos", climbingAndSpeakerPos);
+    NamedCommands.registerCommand("startingPos", startingPos);
+    NamedCommands.registerCommand("intakePos", intakePos);
+    NamedCommands.registerCommand("ampPos", ampPos);
+    NamedCommands.registerCommand("intakeNote", intakeNote);
+    NamedCommands.registerCommand("autoIntakeNote" , autoIntakeNote);
+    NamedCommands.registerCommand("unguidedShoot", unguidedShoot);
+    
     // Configure the trigger bindings
     configureBindings();
 
@@ -58,19 +112,32 @@ public class RobotContainer
       // Applies deadbands and inverts controls because joysticks
       // are back-right positive while robot
       // controls are front-left positive
-      () -> MathUtil.applyDeadband(0.8*(-driverXbox.getRightY()),
+      () -> MathUtil.applyDeadband((-driverXbox.getRightY()),
         OperatorConstants.LEFT_Y_DEADBAND),
-      () -> MathUtil.applyDeadband(0.8*(-driverXbox.getRightX()),
+      () -> MathUtil.applyDeadband((-driverXbox.getRightX()),
         OperatorConstants.LEFT_X_DEADBAND),
       () -> -driverXbox.getLeftX(),
       () -> -driverXbox.getLeftY());
 
+    AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
+      () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
+        OperatorConstants.LEFT_Y_DEADBAND),
+      () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
+        OperatorConstants.LEFT_X_DEADBAND),
+      () -> -MathUtil.applyDeadband(driverXbox.getRightX() * 360,
+        OperatorConstants.ROTATION_DEADBAND),
+      driverXbox.getHID()::getYButtonPressed,
+      driverXbox.getHID()::getAButtonPressed,
+      driverXbox.getHID()::getXButtonPressed,
+      driverXbox.getHID()::getBButtonPressed);
+      
     AbsoluteFieldDrive closedFieldAbsoluteDrive = new AbsoluteFieldDrive(drivebase,
       () -> MathUtil.applyDeadband(driverXbox.getRightY(),
         OperatorConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband(driverXbox.getRightX(),
         OperatorConstants.LEFT_X_DEADBAND),
-      () -> driverXbox.getLeftX()*360);
+      () -> MathUtil.applyDeadband(driverXbox.getLeftX()*360, OperatorConstants.ROTATION_DEADBAND));
+
     TeleopDrive simClosedFieldRel = new TeleopDrive(drivebase,
       () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
         OperatorConstants.LEFT_Y_DEADBAND),
@@ -83,9 +150,7 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> -driverXbox.getRightX(), () -> true);
 
-    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedFieldAbsoluteDrive);
-  
-    
+    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDriveAdv : closedAbsoluteDrive);
 
     autoChooser = AutoBuilder.buildAutoChooser(); //default auto will be "Commands.non()"
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -103,57 +168,55 @@ public class RobotContainer
   {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    new JoystickButton(driverXbox, 1).onTrue((new InstantCommand(drivebase::zeroGyro)));
-    new JoystickButton (driverXbox, 2).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
-    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
-  
-    /*SmartDashboard.putData("Example Auto", new PathPlannerAuto("Example Auto"));
-    SmartDashboard.putData("2 meter 90 degree test", new PathPlannerAuto("2 meter 90 degree test"));
+    driverXbox.start().onTrue((new InstantCommand(drivebase::zeroGyro)));
+    //driverXbox.y().onTrue(new InstantCommand(drivebase::addFakeVisionReading));
+    //driverXbox.x().whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
+    //driverXbox.povUp().whileTrue(climberUp);
+    //driverXbox.povDown().whileTrue(climberDown);
+    driverXbox.leftBumper().whileTrue(intakeNote);
+    driverXbox.rightBumper().whileTrue(outtakeNote);
 
-    // Add a button to run pathfinding commands to SmartDashboard
-    SmartDashboard.putData("Pathfind to Pickup Pos", AutoBuilder.pathfindToPose(
-      new Pose2d(14.0, 6.5, Rotation2d.fromDegrees(0)), 
-      new PathConstraints(
-        4.0, 4.0, 
-        Units.degreesToRadians(360), Units.degreesToRadians(540)
-      ), 
-      0, 
-      2.0
-    ));
-    SmartDashboard.putData("Pathfind to Scoring Pos", AutoBuilder.pathfindToPose(
-      new Pose2d(2.15, 3.0, Rotation2d.fromDegrees(180)), 
-      new PathConstraints(
-        4.0, 4.0, 
-        Units.degreesToRadians(360), Units.degreesToRadians(540)
-      ), 
-      0, 
-      0
-    ));
+    //driverXbox.povUp().onTrue((new InstantCommand(drivebase::)))
 
-    // Add a button to SmartDashboard that will create and follow an on-the-fly path
-    // This example will simply move the robot 2m in the +X field direction
-    SmartDashboard.putData("On-the-fly path", Commands.runOnce(() -> {
-      Pose2d currentPose = drivebase.getPose();
-      
-      // The rotation component in these poses represents the direction of travel
-      Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
-      Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(2.0, 0.0)), new Rotation2d());
+    operatorXbox.povUp().whileTrue(unguidedShoot);
 
-      List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(startPos, endPos);
-      PathPlannerPath path = new PathPlannerPath(
-        bezierPoints, 
-        new PathConstraints(
-          4.0, 4.0, 
-          Units.degreesToRadians(360), Units.degreesToRadians(540)
-        ),  
-        new GoalEndState(0.0, currentPose.getRotation())
-      );
+    operatorXbox.leftBumper().whileTrue(climberLeftDown);
+    operatorXbox.leftTrigger().whileTrue(climberLeftUp);
 
-      // Prevent this path from being flipped on the red alliance, since the given positions are already correct
-      path.preventFlipping = true;
+    operatorXbox.leftBumper().whileTrue(climberRightDown);
+    operatorXbox.leftTrigger().whileTrue(climberRightUp);
 
-      AutoBuilder.followPath(path).schedule();
-    }));*/
+    operatorXbox.a().onTrue(climbingAndSpeakerPos);
+    operatorXbox.y().onTrue(ampPos);
+    operatorXbox.x().onTrue(startingPos);
+    operatorXbox.b().onTrue(intakePos);
+
+    //operatorXbox.a().onTrue(new climbingPosCommand(arm));
+    //operatorXbox.b().onTrue(new ampPosCommand(arm));
+    //operatorXbox.x().onTrue(new startingPosCommand(arm));
+    //operatorXbox.a().whileTrue(genArmPos);
+
+    /*operatorXbox.a().onTrue(Commands.runOnce(
+      () -> {
+        arm.setGoal(Arm.kClimbingPos); 
+        arm.enable();
+      }, arm));
+
+    operatorXbox.b().onTrue(Commands.runOnce(
+      () -> {
+        arm.setGoal(Arm.kAmpShootPos); 
+        arm.enable();
+      }, arm));
+
+    operatorXbox.x().onTrue(Commands.runOnce(
+      () -> {
+        arm.setGoal(Arm.kStartingPos); 
+        arm.enable();
+      }, arm));
+*/
+    
+
+
   
   }
 
@@ -164,6 +227,18 @@ public class RobotContainer
    */
   public Command getAutonomousCommand(){
     return autoChooser.getSelected();
+  }
+
+  public Command climberLeftZeroCommand(){
+    return new climberLeftZeroCommand(leftClimber);
+  }
+
+  public Command climberRightZeroCommand() {
+    return new climberRightZeroCommand(rightClimber);
+  }
+
+  public Command shooterInitCommand() {
+    return new shooterInitCommand(shooter);
   }
 
   public void setDriveMode()

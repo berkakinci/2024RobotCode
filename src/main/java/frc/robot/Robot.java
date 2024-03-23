@@ -4,33 +4,27 @@
 
 package frc.robot;
 
+
 //import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.net.PortForwarder;
 import swervelib.parser.SwerveParser;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
  * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
  * project, you must also update the build.gradle file in the project.
  */
-public class Robot extends LoggedRobot {
+public class Robot extends TimedRobot {
 
   private static Robot instance;
   private Command m_autonomousCommand;
@@ -38,6 +32,8 @@ public class Robot extends LoggedRobot {
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+
+  public UsbCamera frontCamera;
 
   public Robot() {
     instance = this;
@@ -63,14 +59,22 @@ public class Robot extends LoggedRobot {
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
 
-    CameraServer.startAutomaticCapture();
+    frontCamera = CameraServer.startAutomaticCapture(0);
 
-    PortForwarder.add(5800, "limelight.local", 5800);
+    PortForwarder.add(5800, "photonvision.local", 5800);
     PortForwarder.add(1182, "limelight.local", 1182);
+    
+    m_robotContainer.climberLeftZeroCommand().schedule();
+
+    m_robotContainer.climberRightZeroCommand().schedule();
+    
+    m_robotContainer.shooterInitCommand().schedule();
+
   }
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
   }
   @Override
   public void disabledInit() {
