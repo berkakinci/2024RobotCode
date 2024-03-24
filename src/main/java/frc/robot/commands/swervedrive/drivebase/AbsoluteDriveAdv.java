@@ -40,7 +40,7 @@ public class AbsoluteDriveAdv extends Command
    *                      with deadband already accounted for.  Positive X is away from the alliance wall.
    * @param vY            DoubleSupplier that supplies the y-translation joystick input.  Should be in the range -1 to 1
    *                      with deadband already accounted for.  Positive Y is towards the left wall when looking through
-   *                      the driver station glass.
+   *                      the driver station glass. 
    * @param headingAdjust DoubleSupplier that supplies the component of the robot's heading angle that should be
    *                      adjusted. Should range from -1 to 1 with deadband already accounted for.
    * @param lookAway      Face the robot towards the opposing alliance's wall in the same direction the driver is
