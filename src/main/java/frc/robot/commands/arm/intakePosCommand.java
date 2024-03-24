@@ -24,7 +24,7 @@ public class intakePosCommand extends Command {
 
     @Override
     public void execute() {
-        System.out.println("position error: " + m_ArmSubsystem.showPositionError());
+        //System.out.println("position error: " + m_ArmSubsystem.showPositionError());
     }
 
 }

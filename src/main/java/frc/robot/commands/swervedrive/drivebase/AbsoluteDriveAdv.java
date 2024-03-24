@@ -25,7 +25,7 @@ public class AbsoluteDriveAdv extends Command
 
   private final SwerveSubsystem swerve;
   private final DoubleSupplier  vX, vY;
-  private final DoubleSupplier  headingAdjust;
+  private final DoubleSupplier  headingAdjustX, headingAdjustY;
   private final BooleanSupplier lookAway, lookTowards, lookLeft, lookRight;
   private       boolean         resetHeading = false;
 
@@ -49,14 +49,15 @@ public class AbsoluteDriveAdv extends Command
    * @param lookLeft      Face the robot left
    * @param lookRight     Face the robot right
    */
-  public AbsoluteDriveAdv(SwerveSubsystem swerve, DoubleSupplier vX, DoubleSupplier vY, DoubleSupplier headingAdjust,
+  public AbsoluteDriveAdv(SwerveSubsystem swerve, DoubleSupplier vX, DoubleSupplier vY, DoubleSupplier headingAdjustX, DoubleSupplier headingAdjustY,
                           BooleanSupplier lookAway, BooleanSupplier lookTowards, BooleanSupplier lookLeft,
                           BooleanSupplier lookRight)
   {
     this.swerve = swerve;
     this.vX = vX;
     this.vY = vY;
-    this.headingAdjust = headingAdjust;
+    this.headingAdjustX = headingAdjustX;
+    this.headingAdjustY = headingAdjustY;
     this.lookAway = lookAway;
     this.lookTowards = lookTowards;
     this.lookLeft = lookLeft;
@@ -75,8 +76,11 @@ public class AbsoluteDriveAdv extends Command
   @Override
   public void execute()
   {
-    double headingX = 0;
-    double headingY = 0;
+
+    //double headingX = 0;
+    //double headingY = 0;
+    double headingX = headingAdjustX.getAsDouble();
+    double headingY = headingAdjustY.getAsDouble();
 
     // These are written to allow combinations for 45 angles
     // Face Away from Drivers
@@ -103,9 +107,9 @@ public class AbsoluteDriveAdv extends Command
     // Prevent Movement After Auto
     if (resetHeading)
     {
-      if (headingX == 0 && headingY == 0 && Math.abs(headingAdjust.getAsDouble()) > 0)
+      if (headingX == 0 && headingY == 0 /*&& ((Math.abs(driverHeadingX) > 0) || (Math.abs(driverHeadingY) > 0))*/);
       {
-        // Get the curret Heading
+        // Get the current Heading
         Rotation2d currentHeading = swerve.getHeading();
 
         // Set the Current Heading to the desired Heading
@@ -127,14 +131,14 @@ public class AbsoluteDriveAdv extends Command
     SmartDashboard.putString("Translation", translation.toString());
 
     // Make the robot move
-    if (headingX == 0 && headingY == 0 && Math.abs(headingAdjust.getAsDouble()) > 0)
-    {
-      resetHeading = true;
-      swerve.drive(translation, (Constants.OperatorConstants.TURN_CONSTANT * -headingAdjust.getAsDouble()), true);
-    } else
-    {
+    //if (headingX == 0 && headingY == 0 && Math.abs(headingAdjust.getAsDouble()) > 0)
+    //{
+     // resetHeading = true;
+    //  swerve.drive(translation, (Constants.OperatorConstants.TURN_CONSTANT * -headingAdjust.getAsDouble()), true);
+   // } else
+    //{
       swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);
-    }
+   // }
   }
 
   // Called once the command ends or is interrupted.
