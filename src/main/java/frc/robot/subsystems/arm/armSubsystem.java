@@ -4,6 +4,8 @@
  
 package frc.robot.subsystems.arm;
 
+import java.util.List;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -12,6 +14,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import frc.robot.Constants;
 import frc.robot.Constants.Arm;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
@@ -19,7 +22,15 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 public class armSubsystem extends ProfiledPIDSubsystem {
   private CANSparkMax leftMotor = new CANSparkMax(Arm.kLeftMotorPort, MotorType.kBrushless);
   private CANSparkMax rightMotor = new CANSparkMax(Arm.kRightMotorPort, MotorType.kBrushless);
-  
+  {
+    for( var motor : List.of(leftMotor, rightMotor) ) {
+      motor.setSmartCurrentLimit(
+          Constants.MotorLimit.Neo.stall,
+          Constants.MotorLimit.Neo.free,
+          Constants.MotorLimit.Neo.stallRPM);
+    }
+  }
+
   public DutyCycleEncoder m_encoder = new DutyCycleEncoder(4);
   
   private final ArmFeedforward m_feedforward =

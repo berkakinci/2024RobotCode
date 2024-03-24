@@ -5,11 +5,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import frc.robot.Constants;
 import frc.robot.Constants.Climber;
 
 public class climberLeftSubsystem extends SubsystemBase{
 
     private final CANSparkMax climberMotorLeft = new CANSparkMax(22, MotorType.kBrushless);
+    {
+        climberMotorLeft.setSmartCurrentLimit(
+            Constants.MotorLimit.Neo550.stall,
+            Constants.MotorLimit.Neo550.free,
+            Constants.MotorLimit.Neo550.stallRPM);
+    }
 
     private final RelativeEncoder climberMotorLeftRelativeEncoder = climberMotorLeft.getEncoder();
 

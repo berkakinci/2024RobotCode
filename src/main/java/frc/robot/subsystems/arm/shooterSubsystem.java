@@ -15,10 +15,17 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class shooterSubsystem extends SubsystemBase {
     
     private final CANSparkMax shooterMotor = new CANSparkMax(28, MotorType.kBrushless);
+    {
+        shooterMotor.setSmartCurrentLimit(
+            Constants.MotorLimit.Neo.stall,
+            Constants.MotorLimit.Neo.free,
+            Constants.MotorLimit.Neo.stallRPM);
+    }
     private final RelativeEncoder shooterEncoder = shooterMotor.getEncoder();
 
     public static double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(0);

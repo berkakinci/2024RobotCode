@@ -113,6 +113,19 @@ public final class Constants
         public static final double SIM_AVG_LATENCY_MS = 67.0;
     }
 
+    public static class MotorLimit {
+      public static class Neo {
+        public static final int stall = 60;
+        public static final int free  = 30;
+        public static final int stallRPM = 0; // 0 for linear limit
+      }
+      public static class Neo550 {
+        public static final int stall = 40;
+        public static final int free  = 20;
+        public static final int stallRPM = 0; // 0 for linear limit
+      }
+    }
+
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
       new PIDConstants(0.0020645, 0, 0), // Translation constants 
       new PIDConstants(0.03, 0, 0), // Rotation constants 
