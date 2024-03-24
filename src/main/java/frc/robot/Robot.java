@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import java.io.File;
 import java.io.IOException;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.util.PixelFormat;
 import swervelib.parser.SwerveParser;
 
 /**
@@ -61,7 +63,10 @@ public class Robot extends TimedRobot {
 
     frontCamera = CameraServer.startAutomaticCapture(0);
 
-    PortForwarder.add(5800, "photonvision.local", 5800);
+    //frontCamera.setResolution(320, 180);
+    frontCamera.setVideoMode(PixelFormat.kMJPEG, 160, 120, 30);
+
+    PortForwarder.add(5800, "limelight.local", 5800);
     PortForwarder.add(1182, "limelight.local", 1182);
     
     m_robotContainer.climberLeftZeroCommand().schedule();

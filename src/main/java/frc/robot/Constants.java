@@ -37,9 +37,9 @@ public final class Constants
 
   public static final double ROBOT_MASS = (97) * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(8
-  )), ROBOT_MASS/2);
-  public static final Matter ARM_HEAD   = new Matter(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(36
-  )), ROBOT_MASS/2);
+  )), ROBOT_MASS*0.75);
+  public static final Matter ARM_HEAD   = new Matter(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(24
+  )), ROBOT_MASS*0.25);
   public static final List<Matter> ROBOT_MATTER = List.of(CHASSIS, ARM_HEAD);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
   public static final double ROBORADIUS = 0.51; //distance from center to farthest point on a module
@@ -121,7 +121,7 @@ public final class Constants
     public static class MotorLimit {
       public static class Neo {
         public static final int stall = 60;
-        public static final int free  = 30;
+        public static final int free  = 40;
         public static final int stallRPM = 0; // 0 for linear limit
       }
       public static class Neo550 {
