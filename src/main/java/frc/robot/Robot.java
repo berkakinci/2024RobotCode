@@ -62,8 +62,7 @@ public class Robot extends TimedRobot {
     disabledTimer = new Timer();
 
     frontCamera = CameraServer.startAutomaticCapture(0);
-
-    //frontCamera.setResolution(320, 180);
+    
     frontCamera.setVideoMode(PixelFormat.kMJPEG, 160, 120, 30);
 
     PortForwarder.add(5800, "limelight.local", 5800);

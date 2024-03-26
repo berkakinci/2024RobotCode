@@ -129,7 +129,8 @@ public class AbsoluteDriveAdv extends Command
                                            swerve.getSwerveDriveConfiguration());
     SmartDashboard.putNumber("LimitedTranslation", translation.getX());
     SmartDashboard.putString("Translation", translation.toString());
-
+    //slayyyyyyy
+    //yasssssss
     // Make the robot move
     //if (headingX == 0 && headingY == 0 && Math.abs(headingAdjust.getAsDouble()) > 0)
     //{
@@ -137,7 +138,8 @@ public class AbsoluteDriveAdv extends Command
     //  swerve.drive(translation, (Constants.OperatorConstants.TURN_CONSTANT * -headingAdjust.getAsDouble()), true);
    // } else
     //{
-      swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);
+      //swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);
+      swerve.driveFieldOriented(desiredSpeeds);
    // }
   }
 
