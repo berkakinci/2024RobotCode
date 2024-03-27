@@ -129,10 +129,10 @@ public class RobotContainer
         OperatorConstants.ROTATION_DEADBAND),
       () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
         OperatorConstants.ROTATION_DEADBAND),
-      driverXbox.getHID()::getYButtonPressed,
-      driverXbox.getHID()::getAButtonPressed,
-      driverXbox.getHID()::getXButtonPressed,
-      driverXbox.getHID()::getBButtonPressed);
+      driverXbox.povUp(),
+      driverXbox.povDown(),
+      driverXbox.povLeft(),
+      driverXbox.povRight());
       
     AbsoluteFieldDrive closedFieldAbsoluteDrive = new AbsoluteFieldDrive(drivebase,
       () -> MathUtil.applyDeadband(driverXbox.getRightY(),
