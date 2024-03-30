@@ -15,7 +15,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-//import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 //import edu.wpi.first.math.numbers.N1;
 //import edu.wpi.first.math.numbers.N3;
@@ -78,6 +78,12 @@ public final class Constants
     public static final double kSVolts = 0.8; //try 0.8 if it doesn't work
     public static final double kP = 45; //tiny oscillation at 50
     public static final double kMaxAccelerationRadPerSecSquared = 1;
+    public static final double armToShooterAngle = Math.toRadians(-120.0); // because I'm afraid there is more than one solution if I read back from pivotToShooter.
+    public static final Transform3d pivotToShooter = new Transform3d(Units.inchesToMeters(24.0), 0.0, 0.0,
+                                                                     new Rotation3d(0.0, armToShooterAngle, 0.0));
+    public static final Transform3d botToPivot = new Transform3d(Units.inchesToMeters(-8.0), 0.0, Units.inchesToMeters(9.75),
+                                                                 new Rotation3d(0.0, 0.0, 0.00));
+
     public static final class Encoder {
       public static final double kDistancePerRotation = TAU;
       public static final double kOffset  = 0.386; // Radians
