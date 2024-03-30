@@ -34,6 +34,7 @@ import swervelib.parser.PIDFConfig;
  */
 public final class Constants
 {
+  public static final double TAU = 2*Math.PI;
 
   public static final double ROBOT_MASS = (97) * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(8
@@ -77,8 +78,12 @@ public final class Constants
     public static final double kSVolts = 0.8; //try 0.8 if it doesn't work
     public static final double kP = 45; //tiny oscillation at 50
     public static final double kMaxAccelerationRadPerSecSquared = 1;
-    //public static final double kArmOffsetRads = Math.PI/2;
-    public static final double kEncoderDistancePerRotation = 2*Math.PI;
+    public static final class Encoder {
+      public static final double kDistancePerRotation = TAU;
+      public static final double kOffset  = 0.386; // Radians
+      public static final double kSafeMin = Math.toRadians(3);
+      public static final double kSafeMax = Math.toRadians(100);
+    }
     public static final double kStartingPos = Math.toRadians(75);//0.214*Math.PI*2;//0.610
     public static final double kAmpShootPos = Math.toRadians(90); //0.269*Math.PI*2;//0.665
     public static final double kClimbingandFrontSpeakerShootPos = Math.toRadians(18); //was 15, changed to 18 to compensate for bad offset0.396*Math.PI*2; //0.396

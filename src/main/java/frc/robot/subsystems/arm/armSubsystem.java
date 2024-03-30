@@ -12,7 +12,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants;
 import frc.robot.Constants.Arm;
@@ -49,15 +49,19 @@ public class armSubsystem extends ProfiledPIDSubsystem {
                 Arm.kMaxVelocityRadPerSecond,
                 Arm.kMaxAccelerationRadPerSecSquared))//, Arm.kStartingPos
                 );//add 0 
-    m_encoder.setPositionOffset(0.386);
-    m_encoder.setDistancePerRotation(Arm.kEncoderDistancePerRotation);
+    m_encoder.setPositionOffset(Arm.Encoder.kOffset);
+    m_encoder.setDistancePerRotation(Arm.Encoder.kDistancePerRotation);
     leftMotor.setInverted(false);
     rightMotor.setInverted(true);
     // Start arm at rest in neutral position
-    //setGoal(Arm.kArmOffsetRads);
-    setGoal(Arm.kStartingPos);
+    setSafeGoal(Arm.kStartingPos);
 
     //enable();
+  }
+
+  public final void setSafeGoal(double goal) {
+    goal = MathUtil.clamp(goal, Arm.Encoder.kSafeMin, Arm.Encoder.kSafeMax);
+    setGoal(goal);
   }
 
   @Override
