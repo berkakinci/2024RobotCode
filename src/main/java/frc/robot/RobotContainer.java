@@ -23,6 +23,7 @@ import frc.robot.commands.arm.intakePosCommand;
 import frc.robot.commands.arm.outtakeCommand;
 import frc.robot.commands.arm.shooterInitCommand;
 import frc.robot.commands.arm.startingPosCommand;
+import frc.robot.commands.arm.ContinuousPosCommand;
 import frc.robot.commands.arm.unguidedShooterCommand;
 import frc.robot.commands.climber.climberRightDownCommand;
 import frc.robot.commands.climber.climberRightUpCommand;
@@ -40,6 +41,7 @@ import frc.robot.subsystems.arm.shooterSubsystem;
 import frc.robot.subsystems.climber.climberLeftSubsystem;
 import frc.robot.subsystems.climber.climberRightSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.utils.DriverHelper;
 
 import java.io.File;
 //import java.util.List;
@@ -84,10 +86,12 @@ public class RobotContainer
   private final Command climbingAndSpeakerPos = new climbingPosCommand(arm);
   private final Command startingPos = new startingPosCommand(arm);
   private final Command intakePos = new intakePosCommand(arm);
+  private final Command continuousPos;
   //add in speaker shoot
 
   static CommandXboxController driverXbox = new CommandXboxController(0);
   static CommandXboxController operatorXbox = new CommandXboxController(1);
+  public DriverHelper driverHelper;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -98,6 +102,14 @@ public class RobotContainer
   public RobotContainer()
   {
 
+    // Configure Driver Helper
+    driverHelper = new DriverHelper(driverXbox::getLeftX,
+                                    driverXbox::getLeftY);
+    SmartDashboard.putData("Driver Helper", driverHelper);
+    driverHelper.setTargetPose(Constants.AimTargets.blueSpeaker); // FIXME: For demonstration only.
+    //driverHelper.setPassThrough();
+    continuousPos = new ContinuousPosCommand(arm, driverHelper.armAngle);
+
     NamedCommands.registerCommand("climbingAndSpeakerPos", climbingAndSpeakerPos);
     NamedCommands.registerCommand("startingPos", startingPos);
     NamedCommands.registerCommand("intakePos", intakePos);
@@ -105,6 +117,7 @@ public class RobotContainer
     NamedCommands.registerCommand("intakeNote", intakeNote);
     NamedCommands.registerCommand("autoIntakeNote" , autoIntakeNote);
     NamedCommands.registerCommand("unguidedShoot", unguidedShoot);
+    NamedCommands.registerCommand("continuousPos", continuousPos);
     
     // Configure the trigger bindings
     configureBindings();
@@ -117,18 +130,16 @@ public class RobotContainer
         OperatorConstants.LEFT_Y_DEADBAND),
       () -> MathUtil.applyDeadband((-driverXbox.getRightX()),
         OperatorConstants.LEFT_X_DEADBAND),
-      () -> -driverXbox.getLeftX(),
-      () -> -driverXbox.getLeftY());
+      driverHelper::getHeadingX,
+      driverHelper::getHeadingY);
 
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
       () -> -MathUtil.applyDeadband(driverXbox.getRightY(),
         OperatorConstants.LEFT_Y_DEADBAND),
       () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
         OperatorConstants.LEFT_X_DEADBAND),
-      () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
-        OperatorConstants.ROTATION_DEADBAND),
-      () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
-        OperatorConstants.ROTATION_DEADBAND),
+      driverHelper::getHeadingX,
+      driverHelper::getHeadingY,
       driverXbox.povUp(),
       driverXbox.povDown(),
       driverXbox.povLeft(),
@@ -158,6 +169,10 @@ public class RobotContainer
     autoChooser = AutoBuilder.buildAutoChooser(); //default auto will be "Commands.non()"
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
+  }
+
+  public void periodicUpdateDriverHelper() {
+    driverHelper.updateAim(drivebase.getPose());
   }
 
   /**
