@@ -8,8 +8,8 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-//import edu.wpi.first.apriltag.AprilTagFieldLayout;
-//import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 //import edu.wpi.first.math.Matrix;
 //import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -21,6 +21,8 @@ import edu.wpi.first.math.geometry.Translation3d;
 //import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
+
+import java.io.IOException;
 import java.util.List;
 import swervelib.parser.PIDFConfig;
 
@@ -94,6 +96,27 @@ public final class Constants
     public static final double kAmpShootPos = Math.toRadians(90); //0.269*Math.PI*2;//0.665
     public static final double kClimbingandFrontSpeakerShootPos = Math.toRadians(18); //was 15, changed to 18 to compensate for bad offset0.396*Math.PI*2; //0.396
     public static final double kIntakePos = Math.toRadians(5);
+  }
+
+  private static final AprilTagFieldLayout loadAprilTagLayoutFromFile() {
+    try {
+      var aprilTagLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+      return aprilTagLayout;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static class AimTargets {
+    public static final Pose3d defaultTarget = new Pose3d(8.0, 4.0, 2.0, new Rotation3d()); // Near center of field.
+    public static final AprilTagFieldLayout aprilTagLayout = loadAprilTagLayoutFromFile();
+
+    public static final Transform3d tagToSpeaker = new Transform3d(0.0, 0.0, Units.inchesToMeters(6.0), // FIXME: get real dimensions.
+                                                                   new Rotation3d(0.0, Math.toRadians(157.5), 0.0)); // Get real rotation (currently unused)
+
+    public static final Pose3d blueSpeaker = aprilTagLayout.getTagPose(7)
+                                                           .orElse(defaultTarget)
+                                                           .plus(tagToSpeaker);
   }
 
   public static class OperatorConstants
