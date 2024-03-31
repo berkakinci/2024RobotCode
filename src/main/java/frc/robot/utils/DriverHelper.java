@@ -61,7 +61,7 @@ public class DriverHelper implements Sendable {
     var driverInput = -driverHeadingX.getAsDouble();
     if(passthrough) { 
       return driverInput; };
-    if(Math.abs(driverInput) > driverDeadband) {
+    if(isDriverOverride()) {
       return driverInput; }
 
     var heading = headingDirection.getTranslation();
@@ -76,7 +76,7 @@ public class DriverHelper implements Sendable {
     var driverInput = -driverHeadingY.getAsDouble();
     if(passthrough) { 
       return driverInput; };
-    if(Math.abs(driverInput) > driverDeadband) {
+    if(isDriverOverride()) {
       return driverInput; }
 
     var heading = headingDirection.getTranslation();
@@ -116,6 +116,12 @@ public class DriverHelper implements Sendable {
      *   var launchDirection2d = new Translation2d(launchDirectionXYProjLength, launchDirection.getZ());
      */
     return launchDirectionAngleToXYPlane;
+  }
+
+  private boolean isDriverOverride() {
+    // FIXME: Is there any guarantee we get consistent, unchanging readings from DriverStation throughout an iteration?
+    var magnitude = Math.hypot(driverHeadingX.getAsDouble(), driverHeadingY.getAsDouble());
+    return (magnitude > driverDeadband);
   }
 
   @Override
