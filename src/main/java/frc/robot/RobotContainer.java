@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.arm.ampPosCommand;
+import frc.robot.commands.arm.ampShootCommand;
 import frc.robot.commands.arm.autoIntakeCommand;
 import frc.robot.commands.arm.climbingPosCommand;
 import frc.robot.commands.arm.intakeCommand;
@@ -79,6 +80,7 @@ public class RobotContainer
   private final Command autoIntakeNote = new autoIntakeCommand(intake);
   private final Command outtakeNote = new outtakeCommand(intake);
   private final Command unguidedShoot = new unguidedShooterCommand(shooter);
+  private final Command ampShoot = new ampShootCommand(shooter);
 
   private final Command ampPos = new ampPosCommand(arm);
   private final Command climbingAndSpeakerPos = new climbingPosCommand(arm);
@@ -182,6 +184,7 @@ public class RobotContainer
     //driverXbox.povUp().onTrue((new InstantCommand(drivebase::)))
 
     operatorXbox.povUp().whileTrue(unguidedShoot);
+    operatorXbox.povDown().whileTrue(ampShoot);
 
     operatorXbox.leftBumper().whileTrue(climberLeftDown);
     operatorXbox.leftTrigger().whileTrue(climberLeftUp);
