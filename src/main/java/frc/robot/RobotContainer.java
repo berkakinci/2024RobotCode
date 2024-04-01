@@ -107,6 +107,7 @@ public class RobotContainer
     NamedCommands.registerCommand("intakeNote", intakeNote);
     NamedCommands.registerCommand("autoIntakeNote" , autoIntakeNote);
     NamedCommands.registerCommand("unguidedShoot", unguidedShoot);
+    NamedCommands.registerCommand("defaultPos", startingPos);
     
     // Configure the trigger bindings
     configureBindings();
