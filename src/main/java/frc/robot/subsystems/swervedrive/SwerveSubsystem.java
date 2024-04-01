@@ -298,8 +298,8 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return {@link ChassisSpeeds} which can be sent to th Swerve Drive.
    */
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double headingX, double headingY) {
-    xInput = Math.pow(xInput, 3);
-    yInput = Math.pow(yInput, 3);
+    xInput = adjustSensitivity(xInput);
+    yInput = adjustSensitivity(yInput);
     return swerveDrive.swerveController.getTargetSpeeds(xInput, yInput, headingX, headingY, getHeading().getRadians(), maximumSpeed);  
   }
 
@@ -312,8 +312,8 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return {@link ChassisSpeeds} which can be sent to th Swerve Drive.
    */
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle) {
-    xInput = Math.pow(xInput, 3);
-    yInput = Math.pow(yInput, 3);
+    xInput = adjustSensitivity(xInput);
+    yInput = adjustSensitivity(yInput);
     return swerveDrive.swerveController.getTargetSpeeds(xInput,
                                                         yInput,
                                                         angle.getRadians(),
@@ -398,6 +398,13 @@ public class SwerveSubsystem extends SubsystemBase {
     visionPose.ifPresent(this.visionPoseConsumer);
     
 }
+
+  private static double adjustSensitivity(double value) {
+    double sign = Math.signum(value);
+    double absvalue = Math.abs(value);
+    value = sign * Math.pow(absvalue, Constants.OperatorConstants.kSensitivity);
+    return value;
+  }
 
   /**
    * Factory to fetch the PathPlanner command to follow the defined path.
