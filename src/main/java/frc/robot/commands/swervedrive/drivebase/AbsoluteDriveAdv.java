@@ -138,8 +138,7 @@ public class AbsoluteDriveAdv extends Command
     //  swerve.drive(translation, (Constants.OperatorConstants.TURN_CONSTANT * -headingAdjust.getAsDouble()), true);
    // } else
     //{
-      //swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);
-      swerve.driveFieldOriented(desiredSpeeds);
+    swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);
    // }
   }
 
