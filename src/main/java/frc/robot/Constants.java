@@ -95,7 +95,8 @@ public final class Constants
     public static final double ROTATION_DEADBAND = 0.25;
 
     public static final double TURN_CONSTANT = 15;
-     
+
+    public static final double kSensitivity = 3.0;
   }
 
     public static class Vision {
